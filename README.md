@@ -23,7 +23,8 @@ Para ejecutar las pruebas en kraken debe seguir los siguientes pasos:
 2. Abrir en un editor de código el repositorio
 3. Ingresar a la carpeta de Kraken `cd Kraken`
 4. Instalar Kraken localmente `npm install kraken-node`
-5. Ejecutar las pruebas utilizando alguno de los siguientes comandos:
+5. En el archivo `properties.json` actualice las credenciales para conectarse a ghost
+6. Ejecutar las pruebas utilizando alguno de los siguientes comandos:
     - `./node_modules/kraken-node/bin/kraken-node run`
     - `npx kraken-node run`
 
@@ -38,7 +39,8 @@ Para ejecutar las pruebas en Playwright debe seguir los siguientes pasos:
 
 1. Instalar Playwright `npm install playwright`
 2. Ingresar a la carpeta de Playwright `cd Playwright`
-3. Ejecutar las pruebas utilizando el siguiente comando:
+3. En el archivo `utils/data.js` actualice las credenciales para conectarse a ghost
+4. Ejecutar las pruebas utilizando el siguiente comando:
     - `node index.js`
 
 Los resultados se almacenarán en la carpeta de `screenshots` divido por los diferentes escenarios que se probaron para el alcance de esta entrega.
