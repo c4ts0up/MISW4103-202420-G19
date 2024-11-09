@@ -1,0 +1,19 @@
+{
+    "USERNAME": "m.diaza2@uniandes.edu.co",
+    "PASSWORD": "M4r14n417*",
+    "TITLE_POST": "Publicación programada con fecha valida",
+    "CONTENT_POST": "Contenido de la publicación programada con fecha valida",
+    "POST_DATE": "2024-11-10",
+    "POST_TIME": "12:00",
+    "POST_DATE_INVALID": "2024-11-10",
+    "POST_TIME_INVALID": "25:00",
+    "TITLE_POST_INVALID": "Publicación programada con fecha invalida",
+    "CONTENT_POST_INVALID": "Contenido de la publicación programada con fecha invalida",
+    "MEMBER_NAME": "Mariana Diaz",
+    "MEMBER_EMAIL": "mariana@gmail.com",
+    "MEMBER_2_NAME": "Carlos Duarte",
+    "MEMBER_2_EMAIL": "carlos_duarte@gmail.com",
+    "MEMBER_2_EMAIL_INVALID": "carlos_duarte_test",
+    "LANGUAGE_VALID": "es",
+    "LANGUAGE_INVALID": "wk"
+}
