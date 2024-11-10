@@ -1,0 +1,29 @@
+# Node modules
+Playwright/node_modules/
+Kraken/node_modules/
+
+# Playwright specific files and folders
+Playwright/.playwright/
+
+# Logs
+*.log
+
+# Coverage reports (if using tools like jest, cypress, etc.)
+Playwright/coverage/
+
+# Temporary files from your editor
+Playwright/.vscode/
+Playwright/.idea/
+
+# OS generated files (macOS, Windows, Linux)
+Playwright/.DS_Store
+Playwright/Thumbs.db
+
+# Build artifacts (if using build tools)
+Playwright/dist/
+Playwright/build/
+
+# Playwright test artifacts
+Playwright/screenshots/
+Playwright/videos/
+
