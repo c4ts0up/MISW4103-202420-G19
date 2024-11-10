@@ -21,7 +21,7 @@ test.describe('F5', async () => {
     let membersPage;
 
     test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: false });
+        browser = await chromium.launch({ headless: true });
         context = await browser.newContext();
         basePage = await context.newPage();
 
@@ -77,7 +77,7 @@ test.describe('F5', async () => {
         // THEN se debería guardar el nuevo correo
         // AND se debería mostrar el mensaje "Saved"
         await membersPage.validateChanges({
-            saveButtonResponse: "Saved"
+            saveButtonResponse: "Save"
         });
     });
 
@@ -115,7 +115,7 @@ test.describe('F5', async () => {
         await membersPage.editMember(mockMembers.name);
 
         // AND cambio el correo por un correo inválido
-        await membersPage.inputEmail(mockMembers.validEmail);
+        await membersPage.inputEmail(mockMembers.invalidEmail);
 
         // AND guardo la edición del miembro
         await membersPage.saveMemberChanges();

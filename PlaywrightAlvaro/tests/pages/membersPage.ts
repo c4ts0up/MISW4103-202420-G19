@@ -12,6 +12,7 @@ class MembersPage extends BasePage {
 
     // buttons
     private readonly newMemberButton = "a[data-test-new-member-button='true']";
+    // cubre el botón de Save
     private readonly saveButton = "button[data-test-button='save']"
 
     // span
@@ -23,10 +24,11 @@ class MembersPage extends BasePage {
 
     async findMember(memberName: string) {
         const divMembers = this.page.locator("div[data-test-table='members']");
-        const divTableBody = divMembers.locator("tbody");
+        const divTableBody = divMembers.locator("table >> tbody");
         const usernames = divTableBody.locator("tr > a > div > div > h3");
 
         const selectedMember = usernames.locator(`text=${memberName}`);
+        await expect(selectedMember).toBeVisible();
 
         if (await selectedMember.isVisible()) {
             return selectedMember;
@@ -54,13 +56,14 @@ class MembersPage extends BasePage {
     }
 
     async saveMemberChanges() {
-        await this.page.click(this.saveButton);
-
-        await this.page.waitForFunction(() => {
-            return document.body.innerHTML.length > 0; // Checks if the HTML has been updated
-        }, { timeout: 10000 });
+        const save = this.page.locator(this.saveButton);
+        const span = save.locator('span');
+        await span.click();
     }
 
+    async checkSaveButtonMessage(desiredMessage: string) {
+        await expect(this.page.locator(this.saveButton).locator('span')).toHaveText(desiredMessage);
+    }
 
     async createMember(memberName: string, memberEmail: string) {
         // new member
@@ -90,12 +93,11 @@ class MembersPage extends BasePage {
         nameResponse?: string | null,
         emailResponse?: string | null
     }) {
-        if (saveButtonResponse) {
-            const button = this.page.locator(this.saveButton);
-            const span = button.locator(this.failedSave);
+        // Wait for any HTML change on the page
+        await this.page.waitForFunction(() => document.body.innerHTML.length > 0);
 
-            await expect(span).toBeVisible();
-            await expect(span).toHaveText(saveButtonResponse);
+        if (saveButtonResponse) {
+            await this.checkSaveButtonMessage(saveButtonResponse);
         }
 
         if (nameResponse) {
@@ -103,13 +105,18 @@ class MembersPage extends BasePage {
         }
 
         if (emailResponse) {
-            const divMemberDetails = this.page.locator("div[class='gh-cp-member-email-name']")
-            const divEmail = divMemberDetails.locator("label[for='member-email']").locator("..");
-            const errorResponse = divEmail.locator("div[class$='error'] p");
+            // flaky
+            const errorResponse = this.page.locator("div[class$='error'] p");
 
+            // Wait for the error message to appear
+            await errorResponse.waitFor({ state: 'attached' });
+            await errorResponse.waitFor({ state: 'visible' });
+
+            // Validate the error message
             await expect(errorResponse).toBeVisible();
             await expect(errorResponse).toHaveText(emailResponse);
         }
+
     }
 }
 
