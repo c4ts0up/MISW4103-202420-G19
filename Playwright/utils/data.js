@@ -1,7 +1,7 @@
 module.exports = {
     login: {
-      username: 'Ingrese acá sus correo/usuario para conectarse a ghost',
-      password: 'Ingrese acá su contraseña para conectarse a ghost'
+      username: 'rigby@mail.com',
+      password: 'rigby123456'
     },
     post_content_pe1: {
       title: 'Publicación programada con fecha valida',
