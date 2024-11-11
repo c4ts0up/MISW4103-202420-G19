@@ -12,4 +12,8 @@ export class BasePage {
     async navigateTo() {
         await this.page.goto(this.url);
     }
+
+    async redirectedToHome() {
+        await this.page.waitForURL(this.url);
+    }
 }

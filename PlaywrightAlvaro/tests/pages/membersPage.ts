@@ -14,6 +14,8 @@ class MembersPage extends BasePage {
     private readonly newMemberButton = "a[data-test-new-member-button='true']";
     // cubre el botón de Save
     private readonly saveButton = "button[data-test-button='save']"
+    private readonly memberActionsButton = "button[data-test-button='member-actions']";
+    private readonly deleteMemberButton = "button[data-test-button='delete-member']";
 
     // span
     private readonly failedSave = "span[data-test-task-button-state='failure']";
@@ -28,6 +30,7 @@ class MembersPage extends BasePage {
         const usernames = divTableBody.locator("tr > a > div > div > h3");
 
         const selectedMember = usernames.locator(`text=${memberName}`);
+        // FIXME: si no existe, se muere
         await expect(selectedMember).toBeVisible();
 
         if (await selectedMember.isVisible()) {
@@ -82,6 +85,25 @@ class MembersPage extends BasePage {
         if (!await this.findMember(memberName)) {
             await this.createMember(memberName, memberEmail);
         }
+    }
+
+    async selectMemberActions() {
+        await this.page.click(this.memberActionsButton);
+    }
+
+    async deleteMember() {
+        await this.selectMemberActions();
+        await this.page
+            .locator(this.deleteMemberButton)
+            .locator('span')
+            .click();
+
+        await this.page
+            .locator("button[data-test-button='confirm']")
+            .locator('span')
+            .click();
+
+        await this.page.waitForLoadState('load');
     }
 
     async validateChanges({

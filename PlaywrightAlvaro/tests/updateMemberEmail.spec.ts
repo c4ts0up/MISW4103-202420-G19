@@ -21,7 +21,7 @@ test.describe('F5', async () => {
     let membersPage;
 
     test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: true });
+        browser = await chromium.launch({ headless: false });
         context = await browser.newContext();
         basePage = await context.newPage();
 
@@ -83,7 +83,7 @@ test.describe('F5', async () => {
 
 
     /**
-     * E9: Cambiar el correo de un miembro por un correo inválido
+     * E10: Cambiar el correo de un miembro por un correo inválido
      *
      * GIVEN estoy loggeado como administrador
      * AND estoy en la página de miembros
