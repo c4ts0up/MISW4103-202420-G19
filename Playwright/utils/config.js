@@ -1,30 +1,21 @@
 // utils/config.js
-const fs = require(`fs`);
-
-const ip = `localhost`;
-const port = `3001`;
-const baseUrl =  `http://${ip}:${port}/ghost`;
-const screenshotFolder = `./screenshots`;
+const fs = require('fs');
 
 const config = {
-  ip,
-  port,
-  baseUrl,
-  editorUrl: `${baseUrl}/#/editor/post`,
-  scheduledUrl: `${baseUrl}/#/posts?type=scheduled`,
-  newMemberUrl : `${baseUrl}/#/members/new`,
-  membersPageUrl : `${baseUrl}/#/members`,
-  settingsUrl: `${baseUrl}/#/settings`,
-  languageSettingsUrl: `${baseUrl}/#/settings/publication-language`,
-
-  // capturas de pantalla por cada escenario
-  screenshotFolder,
-  scenarioFolderE1: `${screenshotFolder}/E1`,
-  scenarioFolderE2: `${screenshotFolder}/E2`,
-  scenarioFolderE3: `${screenshotFolder}/E3`,
-  scenarioFolderE4: `${screenshotFolder}/E4`,
-  scenarioFolderE5: `${screenshotFolder}/E5`,
-  scenarioFolderE6: `${screenshotFolder}/E6`,
+  baseUrl: 'http://localhost:2368/ghost/',
+  editorUrl: 'http://localhost:2368/ghost/#/editor/post',
+  scheduledUrl: 'http://localhost:2368/ghost/#/posts?type=scheduled',
+  newMemberUrl : 'http://localhost:2368/ghost/#/members/new',
+  membersPageUrl : 'http://localhost:2368/ghost/#/members',
+  settingsUrl: 'http://localhost:2368/ghost/#/settings',
+  languageSettingsUrl: 'http://localhost:2368/ghost/#/settings/publication-language',
+  screenshotFolder: './screenshots',
+  scenarioFolderE1: './screenshots/E1',
+  scenarioFolderE2: './screenshots/E2',
+  scenarioFolderE3: './screenshots/E3',
+  scenarioFolderE4: './screenshots/E4',
+  scenarioFolderE5: './screenshots/E5',
+  scenarioFolderE6: './screenshots/E6',
 };
 
 // Crear carpetas si no existen
