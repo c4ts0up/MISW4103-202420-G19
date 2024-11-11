@@ -25,8 +25,12 @@ class MembersPage extends BasePage {
     }
 
     async findMember(memberEmail: string) {
+        await this.page.waitForLoadState("networkidle");
+        await this.page.waitForLoadState("load");
+
+
         // Wait for the member list to be present in the DOM
-        const selectedMember = this.page.getByText(memberEmail, {exact: true});
+        const selectedMember = await this.page.getByText(memberEmail, {exact: true});
 
         const memberCount = await selectedMember.count();
 
@@ -37,7 +41,7 @@ class MembersPage extends BasePage {
         }
 
         // Check if the filtered member is visible
-        if (await selectedMember.isVisible()) {
+        if (await selectedMember.isEnabled()) {
             return selectedMember;
         }
 
@@ -51,9 +55,9 @@ class MembersPage extends BasePage {
         // can't edit a 404 member
         expect(selectedMember).not.toBeNull();
 
-        const link = selectedMember.locator("../..");
+        selectedMember.click();
 
-        await link.click();
+        await this.page.waitForLoadState("load");
     }
 
     async inputName(newName: string) {
@@ -68,7 +72,9 @@ class MembersPage extends BasePage {
         const save = this.page.locator(this.saveButton);
         const span = save.locator('span');
         await span.click();
+        await this.page.waitForLoadState("domcontentloaded");
         await this.page.waitForLoadState("networkidle");
+        await this.page.waitForLoadState("load");
     }
 
     async checkSaveButtonMessage(desiredMessage: string) {
@@ -85,6 +91,14 @@ class MembersPage extends BasePage {
 
         // returns to main page
         await this.navigateTo();
+    }
+
+    async baseCreateMember(memberName: string, memberEmail: string) {
+        // new member
+        await this.page.click(this.newMemberButton);
+
+        await this.inputName(memberName);
+        await this.inputEmail(memberEmail);
     }
 
 
@@ -110,7 +124,11 @@ class MembersPage extends BasePage {
             .locator('span')
             .click();
 
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState("load");
+        await this.page.waitForLoadState("networkidle");
+        await this.page.waitForURL("**/members")
+        await this.page.waitForLoadState("load");
+        await this.page.waitForLoadState("networkidle");
     }
 
     async validateChanges({

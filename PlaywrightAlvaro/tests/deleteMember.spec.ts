@@ -11,30 +11,22 @@ import MembersPage from "./pages/membersPage";
 import {mockMembers} from "./data/mockMembers";
 import {adminData} from "./data/admin";
 import {config} from "./config/config";
+import {faker} from "@faker-js/faker";
 
 test.describe('F3', async () => {
 
     let browser;
-    let context;
-    let basePage;
-    let loginPage;
-    let membersPage;
 
     test.beforeAll(async () => {
         browser = await chromium.launch({ headless: false });
-        context = await browser.newContext();
-        basePage = await context.newPage();
-
-        loginPage = new LoginPage(basePage, config.loginPage.url);
-        membersPage = new MembersPage(basePage, config.membersPage.url);
     });
 
     test.afterAll(async () => {
         await browser.close();
-    });
+    })
 
     /**
-     * E8
+     * E7: Borrado exitoso
      *
      * GIVEN estoy loggeado como administrador
      * AND estoy en la página de miembros
@@ -45,6 +37,15 @@ test.describe('F3', async () => {
      * AND miembro no se puede hallar
      */
     test('delete member', async({}) => {
+        let context = await browser.newContext();
+        let basePage = await context.newPage();
+
+        let loginPage = new LoginPage(basePage, config.loginPage.url);
+        let membersPage = new MembersPage(basePage, config.membersPage.url);
+
+        const mockName = faker.person.fullName();
+        const mockEmail = faker.internet.email();
+
         // GIVEN estoy loggeado como administrador
         await loginPage.navigateTo();
         await loginPage.login(
@@ -57,22 +58,25 @@ test.describe('F3', async () => {
 
         // AND hay un miembro creado
         await membersPage.createMemberIfMissing(
-            mockMembers.name,
-            mockMembers.email
+            mockName,
+            mockEmail
         );
+        await membersPage.navigateTo();
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockMembers.name);
+        await membersPage.editMember(mockEmail);
 
         // AND borro el miembro
         await membersPage.deleteMember();
 
         // THEN redirigie a la pagina principal
-        expect(membersPage.redirectedToHome())
+        await membersPage.redirectedToHome();
 
         // AND miembro no se puede hallar
-        const member = await membersPage.findMember();
+        const member = await membersPage.findMember(mockEmail);
         expect(member).toBeNull();
+
+        await context.close();
     });
 
 });
