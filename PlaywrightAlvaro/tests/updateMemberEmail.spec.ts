@@ -4,6 +4,8 @@
  * servicio Ghost para actualizar la información personal del usuario.
  */
 
+// FIXME: flaky. Not waiting correctly to load members
+
 import { test, expect } from '@playwright/test';
 import { chromium } from '@playwright/test';
 import LoginPage from "./pages/loginPage";
@@ -11,6 +13,7 @@ import MembersPage from "./pages/membersPage";
 import {mockMembers} from "./data/mockMembers";
 import {adminData} from "./data/admin";
 import {config} from "./config/config";
+import { faker } from '@faker-js/faker';
 
 test.describe('F5', async () => {
 
@@ -21,7 +24,7 @@ test.describe('F5', async () => {
     let membersPage;
 
     test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: true });
+        browser = await chromium.launch({ headless: false });
         context = await browser.newContext();
         basePage = await context.newPage();
 
@@ -48,6 +51,10 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Saved"
      */
     test('correo válido', async ({}) => {
+        const mockName = faker.person.fullName();
+        const mockEmail = faker.internet.email();
+        const mockValidEmail = faker.internet.email();
+
         // GIVEN estoy loggeado como administrador
         await loginPage.navigateTo();
         await loginPage.login(
@@ -60,16 +67,16 @@ test.describe('F5', async () => {
 
         // AND hay un miembro creado
         await membersPage.createMemberIfMissing(
-            mockMembers.name,
-            mockMembers.email
+            mockName,
+            mockEmail
         );
         await membersPage.navigateTo();
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockMembers.name);
+        await membersPage.editMember(mockEmail);
 
         // AND cambio el correo por un correo válido
-        await membersPage.inputEmail(mockMembers.validEmail);
+        await membersPage.inputEmail(mockValidEmail);
 
         // AND guardo la edición del miembro
         await membersPage.saveMemberChanges();
@@ -95,6 +102,10 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Retry"
      */
     test('correo inválido', async ({}) => {
+        const mockName = faker.person.fullName();
+        const mockEmail = faker.internet.email();
+        const mockInvalidEmail = faker.word.noun();
+
         // GIVEN estoy loggeado como administrador
         await loginPage.navigateTo();
         await loginPage.login(
@@ -107,15 +118,15 @@ test.describe('F5', async () => {
 
         // AND hay un miembro creado
         await membersPage.createMemberIfMissing(
-            mockMembers.name,
-            mockMembers.email
+            mockName,
+            mockEmail
         );
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockMembers.name);
+        await membersPage.editMember(mockEmail);
 
         // AND cambio el correo por un correo inválido
-        await membersPage.inputEmail(mockMembers.invalidEmail);
+        await membersPage.inputEmail(mockInvalidEmail);
 
         // AND guardo la edición del miembro
         await membersPage.saveMemberChanges();

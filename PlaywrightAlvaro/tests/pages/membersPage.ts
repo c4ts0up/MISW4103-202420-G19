@@ -26,42 +26,27 @@ class MembersPage extends BasePage {
 
     async findMember(memberEmail: string) {
         // Wait for the member list to be present in the DOM
-        const memberTable = this.page.locator("p[class$='gh-members-list-email']");
+        const selectedMember = this.page.getByText(memberEmail, {exact: true});
 
-        // Wait for the memberTable to be attached to the DOM before counting
-        await memberTable.waitFor({ state: 'attached' });
+        const memberCount = await selectedMember.count();
 
-        // Get the count of the member table
-        const memberCount = await memberTable.count();
-        console.debug(`Members: ${memberCount}`);
-
+        console.log(`Members: ${memberCount}`);
         // If no members are found, return null
         if (memberCount === 0) {
             return null;
         }
 
-        // Locate the specific member using the memberEmail with the text match
-        const filteredMember = memberTable.locator(`text=${memberEmail}`);
-
-        // Check if the filtered member exists
-        const filteredMemberCount = await filteredMember.count();
-        console.debug(`Selected: ${filteredMemberCount}`);
-
-        if (filteredMemberCount === 0) {
-            return null;
-        }
-
         // Check if the filtered member is visible
-        if (await filteredMember.isVisible()) {
-            return filteredMember;
+        if (await selectedMember.isVisible()) {
+            return selectedMember;
         }
 
         return null;
     }
 
 
-    async editMember(memberName: string) {
-        const selectedMember = await this.findMember(memberName);
+    async editMember(memberEmail: string) {
+        const selectedMember = await this.findMember(memberEmail);
 
         // can't edit a 404 member
         expect(selectedMember).not.toBeNull();
@@ -83,6 +68,7 @@ class MembersPage extends BasePage {
         const save = this.page.locator(this.saveButton);
         const span = save.locator('span');
         await span.click();
+        await this.page.waitForLoadState("networkidle");
     }
 
     async checkSaveButtonMessage(desiredMessage: string) {
