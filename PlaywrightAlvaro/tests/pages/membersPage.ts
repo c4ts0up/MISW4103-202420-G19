@@ -24,20 +24,41 @@ class MembersPage extends BasePage {
         super(page, url);
     }
 
-    async findMember(memberName: string) {
-        const divMembers = this.page.locator("div[data-test-table='members']");
-        const divTableBody = divMembers.locator("table >> tbody");
-        const usernames = divTableBody.locator("tr > a > div > div > h3");
+    async findMember(memberEmail: string) {
+        // Wait for the member list to be present in the DOM
+        const memberTable = this.page.locator("p[class$='gh-members-list-email']");
 
-        const selectedMember = usernames.locator(`text=${memberName}`);
-        // FIXME: si no existe, se muere
-        await expect(selectedMember).toBeVisible();
+        // Wait for the memberTable to be attached to the DOM before counting
+        await memberTable.waitFor({ state: 'attached' });
 
-        if (await selectedMember.isVisible()) {
-            return selectedMember;
+        // Get the count of the member table
+        const memberCount = await memberTable.count();
+        console.debug(`Members: ${memberCount}`);
+
+        // If no members are found, return null
+        if (memberCount === 0) {
+            return null;
         }
+
+        // Locate the specific member using the memberEmail with the text match
+        const filteredMember = memberTable.locator(`text=${memberEmail}`);
+
+        // Check if the filtered member exists
+        const filteredMemberCount = await filteredMember.count();
+        console.debug(`Selected: ${filteredMemberCount}`);
+
+        if (filteredMemberCount === 0) {
+            return null;
+        }
+
+        // Check if the filtered member is visible
+        if (await filteredMember.isVisible()) {
+            return filteredMember;
+        }
+
         return null;
     }
+
 
     async editMember(memberName: string) {
         const selectedMember = await this.findMember(memberName);
@@ -82,7 +103,7 @@ class MembersPage extends BasePage {
 
 
     async createMemberIfMissing(memberName: string, memberEmail: string) {
-        if (!await this.findMember(memberName)) {
+        if (!(await this.findMember(memberEmail))) {
             await this.createMember(memberName, memberEmail);
         }
     }

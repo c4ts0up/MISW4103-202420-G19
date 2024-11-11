@@ -11,6 +11,7 @@ export class BasePage {
 
     async navigateTo() {
         await this.page.goto(this.url);
+        await this.page.waitForLoadState('load');
     }
 
     async redirectedToHome() {

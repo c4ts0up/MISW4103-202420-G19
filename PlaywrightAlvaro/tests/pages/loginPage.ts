@@ -22,6 +22,7 @@ class LoginPage extends BasePage {
         await this.page.fill(this.emailInput, email);
         await this.page.fill(this.passwordInput, password);
         await this.page.click(this.submitButton);
+        await this.page.waitForLoadState('load');
         await this.page.waitForURL('**/dashboard');
     }
 }

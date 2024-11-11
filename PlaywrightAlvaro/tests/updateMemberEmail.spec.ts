@@ -21,7 +21,7 @@ test.describe('F5', async () => {
     let membersPage;
 
     test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: false });
+        browser = await chromium.launch({ headless: true });
         context = await browser.newContext();
         basePage = await context.newPage();
 
