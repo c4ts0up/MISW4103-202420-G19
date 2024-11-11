@@ -25,12 +25,10 @@ class MembersPage extends BasePage {
     }
 
     async findMember(memberEmail: string) {
-        await this.page.waitForLoadState("networkidle");
         await this.page.waitForLoadState("load");
 
-
         // Wait for the member list to be present in the DOM
-        const selectedMember = await this.page.getByText(memberEmail, {exact: true});
+        const selectedMember = this.page.getByText(memberEmail, {exact: true});
 
         const memberCount = await selectedMember.count();
 
@@ -55,7 +53,21 @@ class MembersPage extends BasePage {
         // can't edit a 404 member
         expect(selectedMember).not.toBeNull();
 
-        selectedMember.click();
+        await selectedMember.click();
+
+        // Locate the span with the text "Leave"
+        const leaveButton = this.page.locator('span', { hasText: 'Leave' });
+
+        // Check if the span exists
+        const leaveButtonCount = await leaveButton.count();
+
+        if (leaveButtonCount > 0) {
+            // If the span exists, click on it
+            await leaveButton.click();
+            console.log('Leave button clicked');
+        } else {
+            console.log('Leave button does not exist');
+        }
 
         await this.page.waitForLoadState("load");
     }
@@ -91,6 +103,20 @@ class MembersPage extends BasePage {
 
         // returns to main page
         await this.navigateTo();
+
+        // Locate the span with the text "Leave"
+        const leaveButton = this.page.locator('span', { hasText: 'Leave' });
+
+        // Check if the span exists
+        const leaveButtonCount = await leaveButton.count();
+
+        if (leaveButtonCount > 0) {
+            // If the span exists, click on it
+            await leaveButton.click();
+            console.log('Leave button clicked');
+        } else {
+            console.log('Leave button does not exist');
+        }
     }
 
     async baseCreateMember(memberName: string, memberEmail: string) {
@@ -119,16 +145,28 @@ class MembersPage extends BasePage {
             .locator('span')
             .click();
 
+        await this.page.waitForLoadState("load");
+
         await this.page
             .locator("button[data-test-button='confirm']")
             .locator('span')
             .click();
 
-        await this.page.waitForLoadState("load");
-        await this.page.waitForLoadState("networkidle");
+        // Locate the span with the text "Leave"
+        const leaveButton = this.page.locator('span', { hasText: 'Leave' });
+
+        // Check if the span exists
+        const leaveButtonCount = await leaveButton.count();
+
+        if (leaveButtonCount > 0) {
+            // If the span exists, click on it
+            await leaveButton.click();
+            console.log('Leave button clicked');
+        } else {
+            console.log('Leave button does not exist');
+        }
+
         await this.page.waitForURL("**/members")
-        await this.page.waitForLoadState("load");
-        await this.page.waitForLoadState("networkidle");
     }
 
     async validateChanges({

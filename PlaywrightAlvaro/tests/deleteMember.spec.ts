@@ -69,7 +69,7 @@ test.describe('F3', async () => {
         // AND borro el miembro
         await membersPage.deleteMember();
 
-        // THEN redirigie a la pagina principal
+        // THEN redirige a la pagina principal
         await membersPage.redirectedToHome();
 
         // AND miembro no se puede hallar
