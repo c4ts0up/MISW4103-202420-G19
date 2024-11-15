@@ -56,9 +56,15 @@ test.describe('F3', async () => {
 
         // THEN redirige a la pagina principal
         await membersPage.checkRedirection(membersPage.getResource());
+        // vuelve a visitar la página principal para recargar
+        await membersPage.waitTime(5000);
+        await membersPage.navigateTo()
 
         // AND miembro no se puede hallar
         const deletedMember = await membersPage.findMember(mockEmail);
+        if (deletedMember === null) {
+            console.log("Es null");
+        }
         expect(deletedMember).toBeNull();
     });
 });

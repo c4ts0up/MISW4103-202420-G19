@@ -40,6 +40,7 @@ class MembersPage extends BasePage {
             await expect(memberElement).toHaveCount(1);
             return memberElement;
         } catch (error) {
+            console.log(`Miembro ${memberEmail} no encontrado`);
             return null;
         }
     }
@@ -58,21 +59,6 @@ class MembersPage extends BasePage {
 
         return await this.saveMemberChanges();
 
-        // Locate the span with the text "Leave"
-        const leaveButton = this.page.locator('span', { hasText: 'Leave' });
-
-        // Check if the span exists
-        const leaveButtonCount = await leaveButton.count();
-
-        if (leaveButtonCount > 0) {
-            // If the span exists, click on it
-            await leaveButton.click();
-            console.log('Leave button clicked');
-        } else {
-            console.log('Leave button does not exist');
-        }
-
-        await this.page.waitForLoadState("load");
     }
 
     async inputName(newName: string) {
@@ -113,12 +99,6 @@ class MembersPage extends BasePage {
         return await this.saveMemberChanges();
     }
 
-
-    async createMemberIfMissing(memberName: string, memberEmail: string) {
-        if (!(await this.findMember(memberEmail))) {
-            await this.createMember(memberName, memberEmail);
-        }
-    }
 
     async selectMemberActions() {
         await this.page.click(this.memberActionsButton);
@@ -185,7 +165,7 @@ class MembersPage extends BasePage {
     }
 
     async checkRedirection(desiredResource: string) {
-        this.page.waitForURL(desiredResource)
+        await this.page.waitForURL(desiredResource)
     }
 }
 

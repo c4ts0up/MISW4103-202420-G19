@@ -21,4 +21,8 @@ export class BasePage {
             }
         );
     }
+
+    async waitTime(time_ms: number) {
+        await this.page.waitForTimeout(time_ms);
+    }
 }
