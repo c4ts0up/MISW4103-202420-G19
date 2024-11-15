@@ -9,6 +9,10 @@ export class BasePage {
         this.resource = resource;
     }
 
+    getResource () {
+        return this.resource
+    }
+
     async navigateTo() {
         await this.page.goto(
             this.resource,

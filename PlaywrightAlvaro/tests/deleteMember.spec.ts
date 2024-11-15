@@ -12,6 +12,7 @@ import {mockMembers} from "./data/mockMembers";
 import {adminData} from "./data/admin";
 import {config} from "./config/config";
 import {faker} from "@faker-js/faker";
+import playwrightConfig from "../playwright.config";
 
 test.describe('F3', async () => {
 
@@ -26,11 +27,8 @@ test.describe('F3', async () => {
      * THEN redirige a la pagina principal
      * AND miembro no se puede hallar
      */
-    test('delete member', async({}) => {
-        let context = await browser.newContext();
-        let basePage = await context.newPage();
-
-        let membersPage = new MembersPage(basePage, config.membersPage.url);
+    test('delete member', async( { page } ) => {
+        let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
@@ -42,26 +40,25 @@ test.describe('F3', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro creado
-        await membersPage.createMemberIfMissing(
+        await membersPage.createMember(
             mockName,
             mockEmail
         );
         await membersPage.navigateTo();
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockEmail);
+        const selectedMember = await membersPage.findMember(mockEmail)
 
         // AND borro el miembro
-        await membersPage.deleteMember();
+        await membersPage.deleteMember(
+            selectedMember
+        );
 
         // THEN redirige a la pagina principal
-        await membersPage.redirectedToHome();
+        await membersPage.checkRedirection(membersPage.getResource());
 
         // AND miembro no se puede hallar
-        const member = await membersPage.findMember(mockEmail);
-        expect(member).toBeNull();
-
-        await context.close();
+        const deletedMember = await membersPage.findMember(mockEmail);
+        expect(deletedMember).toBeNull();
     });
-
 });

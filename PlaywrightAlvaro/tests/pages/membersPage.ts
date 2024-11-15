@@ -11,13 +11,14 @@ class MembersPage extends BasePage {
     private readonly nameInputLabel = "Name";
     private readonly emailInputLabel = "Email";
 
-
     // fields
     private readonly nameInput = "input[data-test-input='member-name']";
     private readonly emailInput = "input[data-test-input='member-email']";
 
     // buttons
     private readonly newMemberButton = "a[data-test-new-member-button='true']";
+    private confirmDeleteMemberButton = "button[data-test-button='confirm']"
+
     // cubre el botón de Save
     private readonly saveButton = "button[data-test-button='save']"
     private readonly memberActionsButton = "button[data-test-button='member-actions']";
@@ -26,6 +27,7 @@ class MembersPage extends BasePage {
     // span
     private readonly failedSave = "span[data-test-task-button-state='failure']";
 
+
     constructor(page: Page, resource: string) {
         super(page, resource);
     }
@@ -33,7 +35,6 @@ class MembersPage extends BasePage {
     async findMember(memberEmail: string) {
         // wait for members to load
         const memberElement = this.page.getByText(memberEmail);
-
 
         try{
             await expect(memberElement).toHaveCount(1);
@@ -123,35 +124,26 @@ class MembersPage extends BasePage {
         await this.page.click(this.memberActionsButton);
     }
 
-    async deleteMember() {
-        await this.selectMemberActions();
+    async deleteMember(
+        memberElement: Locator
+    ) {
+        // selecciona el miembro
+        await memberElement.click();
+
+        // clic en member actions
+        await this.page
+            .locator(this.memberActionsButton)
+            .click();
+
+        // clic en delete member
         await this.page
             .locator(this.deleteMemberButton)
-            .locator('span')
             .click();
 
-        await this.page.waitForLoadState("load");
-
+        // clic en confirmar
         await this.page
-            .locator("button[data-test-button='confirm']")
-            .locator('span')
+            .locator(this.confirmDeleteMemberButton)
             .click();
-
-        // Locate the span with the text "Leave"
-        const leaveButton = this.page.locator('span', { hasText: 'Leave' });
-
-        // Check if the span exists
-        const leaveButtonCount = await leaveButton.count();
-
-        if (leaveButtonCount > 0) {
-            // If the span exists, click on it
-            await leaveButton.click();
-            console.log('Leave button clicked');
-        } else {
-            console.log('Leave button does not exist');
-        }
-
-        await this.page.waitForURL("**/members")
     }
 
     async validateChanges({
@@ -190,6 +182,10 @@ class MembersPage extends BasePage {
 
     async getEmailSaveResponse() {
         return this.page.locator('div[class$=\'error\'] p.response');
+    }
+
+    async checkRedirection(desiredResource: string) {
+        this.page.waitForURL(desiredResource)
     }
 }
 
