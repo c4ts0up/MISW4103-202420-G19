@@ -110,6 +110,8 @@ test.describe('F5', async () => {
         // THEN no se debería guardar
         // AND se debería mostrar el mensaje "Retry"
         expect(saveButtonResponse.trim()).toEqual('Retry');
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
     });
 
 
@@ -130,7 +132,6 @@ test.describe('F5', async () => {
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
-        const mockInvalidEmail = faker.word.noun();
 
         // GIVEN estoy loggeado como administrador
 
@@ -156,6 +157,8 @@ test.describe('F5', async () => {
         // THEN no se debería guardar
         // AND se debería mostrar el mensaje "Retry"
         expect(saveButtonResponse.trim()).toEqual('Retry')
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        await expect(getEmailSaveResponse).toHaveText('Member already exists. Attempting to add member with existing email address');
     });
 });
 

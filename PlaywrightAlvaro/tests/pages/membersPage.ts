@@ -84,7 +84,7 @@ class MembersPage extends BasePage {
         await this.page.fill(this.emailInput, newEmail);
     }
 
-    async saveMemberChanges(): Promise<string> {
+    async saveMemberChanges() {
         const buttonLocator = this.page.locator(this.saveButton);
         const initialText = await buttonLocator.textContent();
 
@@ -110,28 +110,6 @@ class MembersPage extends BasePage {
 
         // guardar
         return await this.saveMemberChanges();
-        //
-        // // Locate the span with the text "Leave"
-        // const leaveButton = this.page.locator('span', { hasText: 'Leave' });
-        //
-        // // Check if the span exists
-        // const leaveButtonCount = await leaveButton.count();
-        //
-        // if (leaveButtonCount > 0) {
-        //     // If the span exists, click on it
-        //     await leaveButton.click();
-        //     console.log('Leave button clicked');
-        // } else {
-        //     console.log('Leave button does not exist');
-        // }
-    }
-
-    async baseCreateMember(memberName: string, memberEmail: string) {
-        // new member
-        await this.page.click(this.newMemberButton);
-
-        await this.inputName(memberName);
-        await this.inputEmail(memberEmail);
     }
 
 
@@ -208,8 +186,12 @@ class MembersPage extends BasePage {
             await expect(errorResponse).toBeVisible();
             await expect(errorResponse).toHaveText(emailResponse);
         }
+    }
 
+    async getEmailSaveResponse() {
+        return this.page.locator('div[class$=\'error\'] p.response');
     }
 }
+
 
 export default MembersPage;
