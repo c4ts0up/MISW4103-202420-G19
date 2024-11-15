@@ -17,16 +17,6 @@ import { faker } from '@faker-js/faker';
 
 test.describe('F5', async () => {
 
-    let browser;
-
-    test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: false });
-    });
-
-    test.afterAll(async () => {
-        await browser.close();
-    });
-
     /**
      * E8: Cambiar el correo de un miembro por un correo válido
      *
@@ -39,12 +29,8 @@ test.describe('F5', async () => {
      * THEN se deberia guardar el nuevo correo
      * AND se debería mostrar el mensaje "Saved"
      */
-    test('correo válido', async ({}) => {
-        let browser = await chromium.launch({ headless: false });
-        let context = await browser.newContext();
-        let basePage = await context.newPage();
-
-        let membersPage = new MembersPage(basePage, config.membersPage.url);
+    test('correo válido', async ( { page } ) => {
+        let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
@@ -56,28 +42,26 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro creado
-        await membersPage.createMemberIfMissing(
+        await membersPage.createMember(
             mockName,
             mockEmail
         );
         await membersPage.navigateTo();
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockEmail);
+        const selectedMember = await membersPage.findMember(mockEmail)
 
         // AND cambio el correo por un correo válido
-        await membersPage.inputEmail(mockValidEmail);
-
         // AND guardo la edición del miembro
-        await membersPage.saveMemberChanges();
+        const saveButtonResponse = await membersPage.editMember(
+            selectedMember,
+            mockName,
+            mockValidEmail
+        );
 
         // THEN se debería guardar el nuevo correo
         // AND se debería mostrar el mensaje "Saved"
-        await membersPage.validateChanges({
-            saveButtonResponse: "Save"
-        });
-
-        await browser.close();
+        expect(saveButtonResponse.trim()).toEqual('Saved');
     });
 
 
@@ -93,11 +77,8 @@ test.describe('F5', async () => {
      * THEN no se debería guardar
      * AND se debería mostrar el mensaje "Retry"
      */
-    test('correo inválido', async ({}) => {
-        let context = await browser.newContext();
-        let basePage = await context.newPage();
-
-        let membersPage = new MembersPage(basePage, config.membersPage.url);
+    test('correo inválido', async ( { page } ) => {
+        let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
@@ -115,7 +96,12 @@ test.describe('F5', async () => {
         );
 
         // WHEN selecciono un miembro
-        await membersPage.editMember(mockEmail);
+        const selectedMember = await membersPage.findMember(mockEmail)
+        await membersPage.editMember(
+            selectedMember,
+            mockName,
+            mockInvalidEmail
+        );
 
         // AND cambio el correo por un correo inválido
         await membersPage.inputEmail(mockInvalidEmail);
@@ -129,8 +115,6 @@ test.describe('F5', async () => {
             saveButtonResponse: "Retry",
             emailResponse: "Invalid Email."
         });
-
-        await context.close();
     });
 
 
@@ -146,11 +130,8 @@ test.describe('F5', async () => {
      * THEN se debería guardar el nuevo correo
      * AND se debería mostrar el mensaje "Member already exists. Attempting to add member with existing email address"
      */
-    test('correo repetido', async ({}) => {
-        let context = await browser.newContext();
-        let basePage = await context.newPage();
-
-        let membersPage = new MembersPage(basePage, config.membersPage.url);
+    test('correo repetido', async ( { page } ) => {
+        let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
@@ -183,8 +164,6 @@ test.describe('F5', async () => {
             saveButtonResponse: "Retry",
             emailResponse: "Member already exists. Attempting to add member with existing email address"
         });
-
-        await context.close();
     });
 });
 

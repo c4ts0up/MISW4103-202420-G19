@@ -15,16 +15,6 @@ import {faker} from "@faker-js/faker";
 
 test.describe('F3', async () => {
 
-    let browser;
-
-    test.beforeAll(async () => {
-        browser = await chromium.launch({ headless: false });
-    });
-
-    test.afterAll(async () => {
-        await browser.close();
-    })
-
     /**
      * E7: Borrado exitoso
      *
