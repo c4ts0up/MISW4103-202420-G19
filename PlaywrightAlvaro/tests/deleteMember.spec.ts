@@ -1,7 +1,10 @@
 /**
- * Funcionalidad 3: Eliminar un miembro de la página
+ * ### Funcionalidad 3: Eliminar un miembro de la página
+ *
  * El usuario administrador del servicio Ghost puede eliminar un usuario suscriptor de su servicio Ghost para que pierda
  * acceso a la cuenta de usuario suscrito y su funcionalidad correspondiente.
+ *
+ * [Link de wiki](https://github.com/c4ts0up/MISW4103-202420-G26/wiki/Listado-de-Funcionalidades#funcionalidad-3-eliminar-un-miembro-de-la-p%C3%A1gina)
  */
 
 import {expect, test} from '@playwright/test';
@@ -57,9 +60,6 @@ test.describe('F3', async () => {
 
         // AND miembro no se puede hallar
         const deletedMember = await membersPage.findMember(mockEmail);
-        if (deletedMember === null) {
-            console.log("Es null");
-        }
         expect(deletedMember).toBeNull();
     });
 });

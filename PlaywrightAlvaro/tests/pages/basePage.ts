@@ -13,6 +13,14 @@ export class BasePage {
         return this.resource
     }
 
+    async reload() {
+        await this.page.reload(
+            {
+                waitUntil: 'domcontentloaded'
+            }
+        );
+    }
+
     async navigateTo() {
         await this.page.goto(
             this.resource,

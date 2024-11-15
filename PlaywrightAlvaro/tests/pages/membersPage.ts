@@ -16,17 +16,12 @@ class MembersPage extends BasePage {
     private readonly emailInput = "input[data-test-input='member-email']";
 
     // buttons
-    private readonly newMemberButton = "a[data-test-new-member-button='true']";
     private confirmDeleteMemberButton = "button[data-test-button='confirm']"
 
     // cubre el botón de Save
     private readonly saveButton = "button[data-test-button='save']"
     private readonly memberActionsButton = "button[data-test-button='member-actions']";
     private readonly deleteMemberButton = "button[data-test-button='delete-member']";
-
-    // span
-    private readonly failedSave = "span[data-test-task-button-state='failure']";
-
 
     constructor(page: Page, resource: string) {
         super(page, resource);
@@ -81,8 +76,12 @@ class MembersPage extends BasePage {
         return await buttonLocator.textContent();
     }
 
-    async checkSaveButtonMessage(desiredMessage: string) {
-        await expect(this.page.locator(this.saveButton).locator('span')).toHaveText(desiredMessage);
+    async saveChangesTest() {
+        await this.page
+            .locator(this.saveButton)
+            .click()
+
+        return this.page.locator(this.saveButton);
     }
 
     async createMember(memberName: string, memberEmail: string) {
@@ -99,10 +98,6 @@ class MembersPage extends BasePage {
         return await this.saveMemberChanges();
     }
 
-
-    async selectMemberActions() {
-        await this.page.click(this.memberActionsButton);
-    }
 
     async deleteMember(
         memberElement: Locator
@@ -126,38 +121,9 @@ class MembersPage extends BasePage {
             .click();
     }
 
-    async validateChanges({
-        saveButtonResponse = null,
-        nameResponse = null,
-        emailResponse = null
-                          }: {
-        saveButtonResponse?: string | null,
-        nameResponse?: string | null,
-        emailResponse?: string | null
-    }) {
-        // Wait for any HTML change on the page
-        await this.page.waitForFunction(() => document.body.innerHTML.length > 0);
-
-        if (saveButtonResponse) {
-            await this.checkSaveButtonMessage(saveButtonResponse);
-        }
-
-        if (nameResponse) {
-            // No hay un caso inválido hallado para el nombre
-        }
-
-        if (emailResponse) {
-            // flaky
-            const errorResponse = this.page.locator("div[class$='error'] p");
-
-            // Wait for the error message to appear
-            await errorResponse.waitFor({ state: 'attached' });
-            await errorResponse.waitFor({ state: 'visible' });
-
-            // Validate the error message
-            await expect(errorResponse).toBeVisible();
-            await expect(errorResponse).toHaveText(emailResponse);
-        }
+    async getEmailInputLocator() {
+        return this.page
+            .getByLabel(this.emailInputLabel);
     }
 
     async getEmailSaveResponse() {
