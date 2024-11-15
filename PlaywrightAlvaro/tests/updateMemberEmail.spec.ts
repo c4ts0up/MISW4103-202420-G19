@@ -44,7 +44,6 @@ test.describe('F5', async () => {
         let context = await browser.newContext();
         let basePage = await context.newPage();
 
-        let loginPage = new LoginPage(basePage, config.loginPage.url);
         let membersPage = new MembersPage(basePage, config.membersPage.url);
 
         const mockName = faker.person.fullName();
@@ -52,11 +51,6 @@ test.describe('F5', async () => {
         const mockValidEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-        await loginPage.navigateTo();
-        await loginPage.login(
-            adminData.username,
-            adminData.password
-        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
@@ -103,7 +97,6 @@ test.describe('F5', async () => {
         let context = await browser.newContext();
         let basePage = await context.newPage();
 
-        let loginPage = new LoginPage(basePage, config.loginPage.url);
         let membersPage = new MembersPage(basePage, config.membersPage.url);
 
         const mockName = faker.person.fullName();
@@ -111,11 +104,6 @@ test.describe('F5', async () => {
         const mockInvalidEmail = faker.word.noun();
 
         // GIVEN estoy loggeado como administrador
-        await loginPage.navigateTo();
-        await loginPage.login(
-            adminData.username,
-            adminData.password
-        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
@@ -162,7 +150,6 @@ test.describe('F5', async () => {
         let context = await browser.newContext();
         let basePage = await context.newPage();
 
-        let loginPage = new LoginPage(basePage, config.loginPage.url);
         let membersPage = new MembersPage(basePage, config.membersPage.url);
 
         const mockName = faker.person.fullName();
@@ -170,11 +157,6 @@ test.describe('F5', async () => {
         const mockInvalidEmail = faker.word.noun();
 
         // GIVEN estoy loggeado como administrador
-        await loginPage.navigateTo();
-        await loginPage.login(
-            adminData.username,
-            adminData.password
-        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();

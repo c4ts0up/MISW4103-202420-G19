@@ -40,18 +40,13 @@ test.describe('F3', async () => {
         let context = await browser.newContext();
         let basePage = await context.newPage();
 
-        let loginPage = new LoginPage(basePage, config.loginPage.url);
         let membersPage = new MembersPage(basePage, config.membersPage.url);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-        await loginPage.navigateTo();
-        await loginPage.login(
-            adminData.username,
-            adminData.password
-        );
+
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
