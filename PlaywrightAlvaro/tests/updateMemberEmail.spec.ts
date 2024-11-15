@@ -4,16 +4,10 @@
  * servicio Ghost para actualizar la información personal del usuario.
  */
 
-// FIXME: flaky. Not waiting correctly to load members
-
-import { test, expect } from '@playwright/test';
-import { chromium } from '@playwright/test';
-import LoginPage from "./pages/loginPage";
+import {expect, test} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
-import {mockMembers} from "./data/mockMembers";
-import {adminData} from "./data/admin";
 import {config} from "./config/config";
-import { faker } from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 
 test.describe('F5', async () => {
 

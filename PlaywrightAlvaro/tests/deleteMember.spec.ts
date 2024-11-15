@@ -4,15 +4,10 @@
  * acceso a la cuenta de usuario suscrito y su funcionalidad correspondiente.
  */
 
-import { test, expect } from '@playwright/test';
-import { chromium } from '@playwright/test';
-import LoginPage from "./pages/loginPage";
+import {expect, test} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
-import {mockMembers} from "./data/mockMembers";
-import {adminData} from "./data/admin";
 import {config} from "./config/config";
 import {faker} from "@faker-js/faker";
-import playwrightConfig from "../playwright.config";
 
 test.describe('F3', async () => {
 
