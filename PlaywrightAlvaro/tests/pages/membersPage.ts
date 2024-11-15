@@ -109,7 +109,7 @@ class MembersPage extends BasePage {
         await this.inputEmail(memberEmail);
 
         // guardar
-        const saveButtonResponse = await this.saveMemberChanges();
+        return await this.saveMemberChanges();
         //
         // // Locate the span with the text "Leave"
         // const leaveButton = this.page.locator('span', { hasText: 'Leave' });

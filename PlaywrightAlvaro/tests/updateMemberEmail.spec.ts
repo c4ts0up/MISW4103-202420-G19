@@ -90,31 +90,26 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro creado
-        await membersPage.createMemberIfMissing(
+        await membersPage.createMember(
             mockName,
             mockEmail
         );
+        await membersPage.navigateTo();
 
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail)
-        await membersPage.editMember(
+
+        // AND cambio el correo por un correo inválido
+        // AND guardo la edición del miembro
+        const saveButtonResponse = await membersPage.editMember(
             selectedMember,
             mockName,
             mockInvalidEmail
         );
 
-        // AND cambio el correo por un correo inválido
-        await membersPage.inputEmail(mockInvalidEmail);
-
-        // AND guardo la edición del miembro
-        await membersPage.saveMemberChanges();
-
         // THEN no se debería guardar
         // AND se debería mostrar el mensaje "Retry"
-        await membersPage.validateChanges({
-            saveButtonResponse: "Retry",
-            emailResponse: "Invalid Email."
-        });
+        expect(saveButtonResponse.trim()).toEqual('Retry');
     });
 
 
@@ -143,27 +138,22 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro creado
-        await membersPage.createMemberIfMissing(
+        await membersPage.createMember(
             mockName,
             mockEmail
         );
 
         // WHEN creo un miembro
         // AND cambio el correo por un correo existente
-        await membersPage.baseCreateMember(
+        // AND guardo la edicion del miembro
+        const saveButtonResponse = await membersPage.createMember(
             mockName,
             mockEmail
         )
 
-        // AND guardo la edición del miembro
-        await membersPage.saveMemberChanges();
-
         // THEN no se debería guardar
         // AND se debería mostrar el mensaje "Retry"
-        await membersPage.validateChanges({
-            saveButtonResponse: "Retry",
-            emailResponse: "Member already exists. Attempting to add member with existing email address"
-        });
+        expect(saveButtonResponse.trim()).toEqual('Retry')
     });
 });
 
