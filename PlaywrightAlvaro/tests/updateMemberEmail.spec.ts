@@ -138,10 +138,12 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro creado
-        await membersPage.createMember(
+        const saveButtonResponseMember1 = await membersPage.createMember(
             mockName,
             mockEmail
         );
+        expect(saveButtonResponseMember1.trim()).toEqual('Saved');
+        await membersPage.navigateTo();
 
         // WHEN creo un miembro
         // AND cambio el correo por un correo existente

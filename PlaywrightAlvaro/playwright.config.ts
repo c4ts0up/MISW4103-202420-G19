@@ -44,23 +44,23 @@ export default defineConfig({
         storageState: 'playwright/.auth/user.json', // Path to the storage state file
       },
       dependencies: ['setup'], // Include setup if necessary
-    }
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'], // Use the Desktop Firefox device preset
-    //     storageState: 'playwright/.auth/user.json', // Path to the storage state file
-    //   },
-    //   dependencies: ['setup'], // Include setup if necessary
-    // },
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //     storageState: 'playwright/.auth/user.json'
-    //   },
-    //   dependencies: ['setup']
-    // },
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'], // Use the Desktop Firefox device preset
+        storageState: 'playwright/.auth/user.json', // Path to the storage state file
+      },
+      dependencies: ['setup'], // Include setup if necessary
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/user.json'
+      },
+      dependencies: ['setup']
+    },
 
     /* Test against mobile viewports. */
     // {
