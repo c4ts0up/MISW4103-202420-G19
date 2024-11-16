@@ -17,5 +17,10 @@
     "ignore": "antialiasing"
   },
   "viewportHeight":600,
-  "viewportWidth":800
+  "viewportWidth":800,
+  "sut":{
+    "baseVersion": 4.5,
+    "rcVersion": 5.96,
+    "testName": "prueba"
+  }
 }
