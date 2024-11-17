@@ -1,12 +1,12 @@
-const fs = require('fs').promises;
-
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 const config = require("./config.json");
 const { resultsPath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
 const { createReport } = require('./src/webreport');
 const { loadEvidencePNG, loadEvidenceNames} = require('./src/evidences');
 const { pixelmatchRegression} = require('./src/service');
 const { browsers } = require('./config.json');
-const {PNG} = require("pngjs");
+const { PNG } = require("pngjs");
 
 /**
  * Guarda la comparación de dos imágenes
@@ -32,7 +32,7 @@ async function saveComparison(
     );
 
     console.log(`Guardando la regresión visual del screenshot # ${path} ...`);
-    await fs.writeFile(path, buff);
+    fs.writeFileSync(path, buff);
 }
 
 async function saveScreenshot(
@@ -50,7 +50,7 @@ async function saveScreenshot(
     );
 
     console.log(`Guardando el screenshot # ${path} ...`);
-    await fs.writeFile(path, screenshot);
+    fs.writeFileSync(path, screenshot);
 }
 
 
@@ -68,8 +68,8 @@ async function saveReport(
     testName,
     report
 ) {
-    await fs.writeFile(reportPath(browserName, timestamp, testName), report);
-    await fs.copyFile('./index.css', cssPath(browserName, timestamp, testName));
+    await fsPromises.writeFile(reportPath(browserName, timestamp, testName), report);
+    await fsPromises.copyFile('./index.css', cssPath(browserName, timestamp, testName));
 }
 
 
@@ -89,7 +89,7 @@ async function analyzeCase(
 ) {
     const timestamp = new Date().toISOString().replace(/:/g,".");
 
-    await fs.mkdir(resultsPath(browserName, timestamp, testName), { recursive: true });
+    await fsPromises.mkdir(resultsPath(browserName, timestamp, testName), { recursive: true });
 
     // carga los nombres de las imágenes en cada uno
     const baseImageNames = await loadEvidenceNames(baseVersion, browserName, testName);
@@ -118,7 +118,7 @@ async function analyzeCase(
     // guarda tamaños de los screenshots y diferencia
     let widths = [], heights = [], diffs = []
     baseScreenshots.forEach((ss) => {
-        const {w, h} = ss;
+        const w = ss.width, h = ss.height;
         widths.push(w);
         heights.push(h);
         diffs.push(new PNG({ w, h }));
@@ -131,14 +131,14 @@ async function analyzeCase(
             timestamp,
             testName,
             `base-${baseImageNames[i]}`,
-            baseScreenshots[i]
+            PNG.sync.write(baseScreenshots[i])
         );
         await saveScreenshot(
             browserName,
             timestamp,
             testName,
             `rc-${rcImageNames[i]}`,
-            rcScreenshots[i]
+            PNG.sync.write(rcScreenshots[i])
         );
     }
 
@@ -153,7 +153,13 @@ async function analyzeCase(
             widths[i],
             heights[i]
         );
-        await saveComparison(PNG.sync.write(diffs[i]), browserName, timestamp, testName, baseImageNames[i]);
+        await saveComparison(
+            PNG.sync.write(diffs[i]),
+            browserName,
+            timestamp,
+            testName,
+            baseImageNames[i]
+        );
         resultInfo[baseImageNames[i]] = numDiffs;
     }
 

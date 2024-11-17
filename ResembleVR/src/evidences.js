@@ -1,5 +1,8 @@
 const {testRunEvidencePath} = require("./utils");
-const {promises: fs} = require("fs");
+const {
+    promises: fs,
+    readFileSync
+} = require("fs");
 const path = require("path");
 const pngjs = require('pngjs');
 const { PNG } = pngjs;
@@ -81,7 +84,8 @@ async function loadEvidencePNG(sutVersion, browserName, testName, imageNames) {
         // Await the reading of each image file and push its buffer into the list
         for (const file of imageNames) {
             const filePath = path.join(directoryPath, file);
-            const img = await PNG.read(filePath); // Asynchronously read the image
+            const imageBuffer = readFileSync(filePath);
+            const img = PNG.sync.read(imageBuffer); // Asynchronously read the image
             imageList.push(img); // Push the image buffer to the list
         }
 
