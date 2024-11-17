@@ -24,10 +24,10 @@ function concatanatePaths(directories: string[]) {
  */
 export function screenshotPath(
     basePath: string,
-    version: string,
+    version: number,
     browserName: string,
     testName: string,
     screenshotIdentifier: string
 ): string {
-    return concatanatePaths([basePath, version, browserName, testName, `${screenshotIdentifier}.png`]);
+    return concatanatePaths([basePath, version.toString(), browserName, testName, `${screenshotIdentifier}.png`]);
 }

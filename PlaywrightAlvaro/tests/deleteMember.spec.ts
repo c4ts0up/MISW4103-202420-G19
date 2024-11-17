@@ -11,6 +11,8 @@ import {expect, test} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {faker} from "@faker-js/faker";
+import {myScreenshot} from "./utils/evidence";
+import {screenshotPath} from "./utils/pathCreator";
 
 test.describe('F3', async () => {
 
@@ -25,7 +27,8 @@ test.describe('F3', async () => {
      * THEN redirige a la pagina principal
      * AND miembro no se puede hallar
      */
-    test('delete member', async( { page } ) => {
+    const e7 = 'E007-delete-member';
+    test(e7, async( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -44,6 +47,15 @@ test.describe('F3', async () => {
         );
         await membersPage.navigateTo();
 
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "before"
+        ));
+
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail)
 
@@ -57,6 +69,15 @@ test.describe('F3', async () => {
         // vuelve a visitar la página principal para recargar
         await membersPage.waitTime(5000);
         await membersPage.navigateTo()
+
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "after"
+        ));
 
         // AND miembro no se puede hallar
         const deletedMember = await membersPage.findMember(mockEmail);

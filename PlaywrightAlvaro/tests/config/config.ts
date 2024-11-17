@@ -1,4 +1,8 @@
 export const config = {
+    evidence: {
+        baseDirectory: 'test-results/evidence'
+    },
+
     loginPage: {
         resource: `ghost/#/signin`
     },

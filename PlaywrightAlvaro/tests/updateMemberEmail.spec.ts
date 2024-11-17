@@ -12,6 +12,7 @@ import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {faker} from '@faker-js/faker';
 import {myScreenshot} from "./utils/evidence";
+import {screenshotPath} from "./utils/pathCreator";
 
 test.describe('F5', async () => {
 
@@ -48,7 +49,14 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // before screenshot
-        await myScreenshot(page, config.sut.version, e8, "before");
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "before"
+            )
+        );
 
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
@@ -62,7 +70,15 @@ test.describe('F5', async () => {
         );
 
         // after screenshot
-        await myScreenshot(page, config.sut.version, e8, "after");
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "after"
+            )
+        );
 
         // THEN se debería mostrar el mensaje "Saved"
         expect(saveButtonResponse.trim()).toEqual('Saved');
@@ -87,7 +103,7 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e9 = "E009-correo-invalido"
-    test(e9, async ( { page } ) => {
+    test(e9, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -107,7 +123,14 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // before screenshot
-        await myScreenshot(page, config.sut.version, e9, "before");
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "before"
+            )
+        );
 
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
@@ -121,7 +144,14 @@ test.describe('F5', async () => {
         );
 
         // after screenshot
-        await myScreenshot(page, config.sut.version, e9, "after");
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "after"
+            )
+        );
 
         // THEN se debería mostrar el mensaje "Retry"
         expect(saveButtonResponse.trim()).toEqual('Retry');
@@ -150,7 +180,7 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e10 = "E010-correo-repetido";
-    test(e10, async ( { page } ) => {
+    test(e10, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const xMockName = faker.person.fullName();
@@ -181,7 +211,14 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // before screenshot
-        await myScreenshot(page, config.sut.version, e10, "before");
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "before"
+            )
+        );
 
         // WHEN selecciono el miembro Y
         const yMember = await membersPage.findMember(yMockEmail);
@@ -194,7 +231,14 @@ test.describe('F5', async () => {
         )
 
         // after screenshot
-        await myScreenshot(page, config.sut.version, e10, "after");
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "after"
+            )
+        );
 
         // THEN se debería mostrar el mensaje "Retry"
         // FIXME: la aplicación muestra brevemente (~50 ms) "Saved", antes de cambiar a "Retry"
