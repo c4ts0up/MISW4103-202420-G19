@@ -24,7 +24,7 @@
     "testName": "E010-correo-repetido",
     "evidence":{
       "baseDirectory": "evidence",
-      "targetDirectory": "results/vr"
+      "targetDirectory": "results_vr"
     }
   }
 }

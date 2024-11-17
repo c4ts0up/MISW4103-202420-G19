@@ -46,8 +46,8 @@ function comparisonImagePath(browserName, timestamp, testIdentifier, screenshotI
     return concatanatePaths([
         config.sut.evidence.targetDirectory,
         browserName,
-        timestamp,
         testIdentifier,
+        timestamp,
         screenshotIdentifier
     ])
 }
@@ -60,7 +60,12 @@ function comparisonImagePath(browserName, timestamp, testIdentifier, screenshotI
  * @returns {(string|*)[]}
  */
 function resultsDirectories(browserName, timestamp, testIdentifier) {
-    return [config.sut.evidence.targetDirectory, browserName, timestamp, testIdentifier];
+    return [
+        config.sut.evidence.targetDirectory,
+        browserName,
+        testIdentifier,
+        timestamp
+    ];
 }
 
 
