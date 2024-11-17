@@ -1,5 +1,4 @@
 const config = require("../config.json");
-const { viewportHeight, viewportWidth, browsers, options } = config;
 
 function browser(b, info, imageNames){
     return `<div class=" browser" id="test0">

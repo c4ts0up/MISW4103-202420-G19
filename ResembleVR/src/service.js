@@ -6,11 +6,8 @@
 
 const compareImages = require("resemblejs/compareImages");
 const config = require("../config.json");
-const { options } = config;
-
-const pmConfig = require("../pixelmatch.json");
+const { resembleOptions, pixelmatchOptions } = config;
 const {PNG} = require("pngjs");
-const { pixelmatchOptions } = pmConfig;
 
 /**
  * Compara y retorna los resultados de comparar dos imágenes en ResembleJS
@@ -27,7 +24,7 @@ async function resembleRegression(
     const data = await compareImages(
         imageBase,
         imageRc,
-        options
+        resembleOptions
     )
 
     return [
