@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const compareImages = require("resemblejs/compareImages");
 const config = require("./config.json");
-const { testRunEvidencePath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
+const { resultsPath, testRunEvidencePath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
 const { browsers, options } = config;
 const { createReport } = require('./src/view');
 
@@ -135,6 +135,8 @@ async function visualRegressionAnalysis(
     testName
 ) {
     const timestamp = new Date().toISOString().replace(/:/g,".");
+
+    await fs.mkdir(resultsPath(browserName, timestamp, testName), { recursive: true });
 
     // carga las imágenes de ambos
     const baseScreenshots = await loadScreenshots(baseVersion, browserName, testName);

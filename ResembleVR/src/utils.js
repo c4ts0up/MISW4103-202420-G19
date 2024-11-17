@@ -7,14 +7,13 @@
 const config = require('../config.json');
 const fs = require('fs');
 
+
 /**
  * Función base para crear directorios
  * @param directories lista de directorios
  */
 function concatanatePaths(directories) {
-    const dir = "./" + directories.join('/');
-    fs.mkdirSync(dir, { recursive: true });
-    return dir
+    return "./" + directories.join('/')
 }
 
 /**
@@ -36,11 +35,7 @@ function screenshotPath(
     return concatanatePaths([basePath, version.toString(), browserName, testName, `${screenshotIdentifier}.png`]);
 }
 
-function testRunEvidencePath(
-    sutVersion,
-    browserName,
-    testIdentifier
-) {
+function testRunEvidencePath(sutVersion, browserName, testIdentifier) {
     return concatanatePaths([
         config.sut.evidence.baseDirectory,
         sutVersion,
@@ -50,12 +45,7 @@ function testRunEvidencePath(
 }
 
 
-function comparisonImagePath(
-    browserName,
-    timestamp,
-    testIdentifier,
-    screenshotIdentifier
-) {
+function comparisonImagePath(browserName, timestamp, testIdentifier, screenshotIdentifier) {
     return concatanatePaths([
         config.sut.evidence.targetDirectory,
         browserName,
@@ -65,11 +55,16 @@ function comparisonImagePath(
     ])
 }
 
-function reportPath(
-    browserName,
-    timestamp,
-    testIdentifier
-) {
+function resultsPath(browserName, timestamp, testIdentifier) {
+    return concatanatePaths([
+        config.sut.evidence.targetDirectory,
+        browserName,
+        timestamp,
+        testIdentifier
+    ])
+}
+
+function reportPath(browserName, timestamp, testIdentifier) {
     return concatanatePaths([
         config.sut.evidence.targetDirectory,
         browserName,
@@ -79,11 +74,7 @@ function reportPath(
     ])
 }
 
-function cssPath(
-    browserName,
-    timestamp,
-    testIdentifier
-) {
+function cssPath(browserName, timestamp, testIdentifier) {
     return concatanatePaths([
         config.sut.evidence.targetDirectory,
         browserName,
@@ -97,5 +88,6 @@ module.exports = {
     testRunEvidencePath,
     comparisonImagePath,
     reportPath,
-    cssPath
+    cssPath,
+    resultsPath
 }
