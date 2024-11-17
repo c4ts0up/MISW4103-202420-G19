@@ -94,6 +94,7 @@ async function loadEvidencePNG(sutVersion, browserName, testName, imageNames) {
 }
 
 module.exports = {
-    loadScreenshots: loadEvidenceFS,
+    loadEvidenceFS,
+    loadEvidencePNG,
     loadEvidenceNames
 }

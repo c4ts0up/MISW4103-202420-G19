@@ -3,9 +3,10 @@ const fs = require('fs').promises;
 const config = require("./config.json");
 const { resultsPath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
 const { createReport } = require('./src/webreport');
-const { loadEvidenceNames, loadEvidenceFS } = require('./src/evidences');
-const { resembleRegression } = require('./src/service');
+const { loadEvidencePNG, loadEvidenceNames} = require('./src/evidences');
+const { pixelmatchRegression} = require('./src/service');
 const { browsers } = require('./config.json');
+const {PNG} = require("pngjs");
 
 /**
  * Guarda la comparación de dos imágenes
@@ -111,8 +112,17 @@ async function analyzeCase(
     }
 
     // carga las imágenes de ambos
-    const baseScreenshots = await loadEvidenceFS(baseVersion, browserName, testName, baseImageNames);
-    const rcScreenshots = await loadEvidenceFS(rcVersion, browserName, testName, rcImageNames);
+    const baseScreenshots = await loadEvidencePNG(baseVersion, browserName, testName, baseImageNames);
+    const rcScreenshots = await loadEvidencePNG(rcVersion, browserName, testName, rcImageNames);
+
+    // guarda tamaños de los screenshots y diferencia
+    let widths = [], heights = [], diffs = []
+    baseScreenshots.forEach((ss) => {
+        const {w, h} = ss;
+        widths.push(w);
+        heights.push(h);
+        diffs.push(new PNG({ w, h }));
+    })
 
     // guarda los screenshots de prueba
     for (let i=0; i<baseImageNames.length; i++) {
@@ -136,9 +146,15 @@ async function analyzeCase(
 
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
-        let [ results, buffer ] = await resembleRegression(baseScreenshots[i], rcScreenshots[i]);
-        await saveComparison(buffer, browserName, timestamp, testName, baseImageNames[i]);
-        resultInfo[baseImageNames[i]] = results;
+        const numDiffs = await pixelmatchRegression(
+            baseScreenshots[i].data,
+            rcScreenshots[i].data,
+            diffs[i].data,
+            widths[i],
+            heights[i]
+        );
+        await saveComparison(PNG.sync.write(diffs[i]), browserName, timestamp, testName, baseImageNames[i]);
+        resultInfo[baseImageNames[i]] = numDiffs;
     }
 
     console.log(`Creando reporte ...`);
