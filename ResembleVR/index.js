@@ -5,43 +5,7 @@ const config = require("./config.json");
 const { resultsPath, testRunEvidencePath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
 const { browsers, options } = config;
 const { createReport } = require('./src/view');
-
-/**
- * Carga las imágenes de una versión de la APB y ejecución específicas
- *
- * @param sutVersion versión de APB
- * @param browserName nombre del navegador donde se ejecuta
- * @param testName nombre del test e imágenes ejecutadas
- * @returns {Promise<*[]>} promesa de un arreglo de image buffers
- */
-async function loadScreenshots(sutVersion, browserName, testName) {
-    const imageList = [];
-    const directoryPath = testRunEvidencePath(sutVersion, browserName, testName);
-    console.log(`Cargando las imágenes de ${directoryPath} ...`);
-
-    try {
-        // Read all files in the directory asynchronously
-        const files = await fs.readdir(directoryPath);
-
-        // Filter and load image files asynchronously
-        const imageFiles = files.filter(file => /\.(png)$/i.test(file));
-
-        // Ordenadas en orden de pasos
-        imageFiles.sort();
-
-        // Await the reading of each image file and push its buffer into the list
-        for (const file of imageFiles) {
-            const filePath = path.join(directoryPath, file);
-            const imageBuffer = await fs.readFile(filePath); // Asynchronously read the image
-            imageList.push(imageBuffer); // Push the image buffer to the list
-        }
-
-        return imageList;
-    } catch (error) {
-        console.error('Error loading images:', error);
-        throw error; // Re-throw the error if you need it to be handled elsewhere
-    }
-}
+const { loadScreenshots, loadEvidenceNames} = require('./src/evidences');
 
 /**
  * Compara y retorna los resultados de comparar dos imágenes en ResembleJS
@@ -95,7 +59,7 @@ async function saveComparison(
             browserName,
             timestamp,
             testIdentifier,
-            `${screenshotIdentifier}.compare.png`
+            `compare-${screenshotIdentifier}`
         ),
         buff
     );
@@ -128,7 +92,7 @@ async function saveReport(
  * @param testName nombre de la prueba a comparar
  * @returns {Promise<void>}
  */
-async function visualRegressionAnalysis(
+async function analyzeCase(
     browserName,
     baseVersion,
     rcVersion,
@@ -138,15 +102,33 @@ async function visualRegressionAnalysis(
 
     await fs.mkdir(resultsPath(browserName, timestamp, testName), { recursive: true });
 
+    // carga los nombres de las imágenes en cada uno
+    const baseImageNames = await loadEvidenceNames(baseVersion, browserName, testName);
+    const rcImageNames = await loadEvidenceNames(rcVersion, browserName, testName);
+
+    // revisa que tengan los mismos elementos
+    if (baseImageNames.length !== rcImageNames.length) {
+        console.log(`El número de screenshots no coincide`);
+        return;
+    }
+
+    // revisa los elementos
+    baseImageNames.sort();
+    rcImageNames.sort();
+    for (let i=0; i<baseImageNames.length; i++) {
+        if (baseImageNames[i] !== rcImageNames[i]) {
+            console.log(`Los nombres de los screenshots no coinciden`);
+            return;
+        }
+    }
+
     // carga las imágenes de ambos
-    const baseScreenshots = await loadScreenshots(baseVersion, browserName, testName);
-    const rcScreenshots = await loadScreenshots(rcVersion, browserName, testName);
+    const baseScreenshots = await loadScreenshots(baseVersion, browserName, testName, baseImageNames);
+    const rcScreenshots = await loadScreenshots(rcVersion, browserName, testName, rcImageNames);
 
     // compara que las imágenes sean de igual longitud
     if (baseScreenshots.length !== rcScreenshots.length) {
-        console.log(`El número de screenshots en ${baseVersion}/${testName} (${baseScreenshots.length}) 
-         es distinto al número de screenshots en ${rcVersion}/${testName} (${rcScreenshots.length}`);
-        return;
+
     }
 
     let resultInfo = [];
@@ -154,7 +136,7 @@ async function visualRegressionAnalysis(
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
         let [ results, buffer ] = await visualRegression(baseScreenshots[i], rcScreenshots[i]);
-        await saveComparison(buffer, browserName, timestamp, testName, i.toString());
+        await saveComparison(buffer, browserName, timestamp, testName, baseImageNames[i]);
         resultInfo.push(results);
     }
 
@@ -169,9 +151,9 @@ async function visualRegressionAnalysis(
  * Entrypoint
  * @returns {Promise<void>}
  */
-async function traverseEvidence() {
+async function analyzeEvidence() {
     for (const b of browsers) {
-        console.log(await visualRegressionAnalysis(
+        console.log(await analyzeCase(
             b,
             config.sut.baseVersion,
             config.sut.rcVersion,
@@ -180,4 +162,4 @@ async function traverseEvidence() {
     }
 }
 
-(async ()=> console.log(await traverseEvidence()))();
+(async ()=> console.log(await analyzeEvidence()))();
