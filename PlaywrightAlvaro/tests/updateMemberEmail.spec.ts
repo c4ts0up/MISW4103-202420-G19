@@ -11,6 +11,8 @@ import {expect, test} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {faker} from '@faker-js/faker';
+import {myScreenshot} from "./utils/evidence";
+import {screenshotPath} from "./utils/pathCreator";
 
 test.describe('F5', async () => {
 
@@ -26,7 +28,8 @@ test.describe('F5', async () => {
      * THEN se deberia guardar el nuevo correo
      * AND se debería mostrar el mensaje "Saved"
      */
-    test('correo válido', async ( { page } ) => {
+    const e8 = 'E008-correo-valido';
+    test(e8, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -45,6 +48,16 @@ test.describe('F5', async () => {
         );
         await membersPage.navigateTo();
 
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "before"
+            )
+        );
+
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
 
@@ -54,6 +67,17 @@ test.describe('F5', async () => {
             selectedMember,
             mockName,
             mockValidEmail
+        );
+
+        // after screenshot
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "after"
+            )
         );
 
         // THEN se debería mostrar el mensaje "Saved"
@@ -78,7 +102,8 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Invalid Email."
      * AND no se debería guardar el nuevo correo
      */
-    test('correo inválido', async ( { page } ) => {
+    const e9 = "E009-correo-invalido"
+    test(e9, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -97,6 +122,16 @@ test.describe('F5', async () => {
         );
         await membersPage.navigateTo();
 
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "before"
+            )
+        );
+
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
 
@@ -106,6 +141,16 @@ test.describe('F5', async () => {
             selectedMember,
             mockName,
             mockInvalidEmail
+        );
+
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "after"
+            )
         );
 
         // THEN se debería mostrar el mensaje "Retry"
@@ -134,7 +179,8 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Member already exists. Attempting to add member with existing email address"
      * AND no se debería guardar el nuevo correo
      */
-    test('correo repetido', async ( { page } ) => {
+    const e10 = "E010-correo-repetido";
+    test(e10, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const xMockName = faker.person.fullName();
@@ -143,6 +189,7 @@ test.describe('F5', async () => {
         const yMockEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
+
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
@@ -163,6 +210,16 @@ test.describe('F5', async () => {
         expect(saveButtonResponseMemberY.trim()).toEqual('Saved');
         await membersPage.navigateTo();
 
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "before"
+            )
+        );
+
         // WHEN selecciono el miembro Y
         const yMember = await membersPage.findMember(yMockEmail);
         // AND cambio el correo por el correo de X
@@ -172,6 +229,16 @@ test.describe('F5', async () => {
             yMockName,
             xMockEmail
         )
+
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "after"
+            )
+        );
 
         // THEN se debería mostrar el mensaje "Retry"
         // FIXME: la aplicación muestra brevemente (~50 ms) "Saved", antes de cambiar a "Retry"

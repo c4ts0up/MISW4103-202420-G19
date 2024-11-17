@@ -1,0 +1,35 @@
+{
+  "url":"http://localhost:3001",
+  "browsers":["chromium", "firefox"],
+  "resembleOptions":{
+    "output": {
+      "errorColor": {
+        "red": 255,
+        "green": 0,
+        "blue": 255
+      },
+      "errorType": "movement",
+      "largeImageThreshold": 1200,
+      "useCrossOrigin": false,
+      "outputDiff": true
+    },
+    "scaleToSameSize": true,
+    "ignore": "antialiasing"
+  },
+  "pixelmatchOptions": {
+    "threshold": 0.1,
+    "includeAA": true,
+    "alpha": 0.1,
+    "aaColor": [255, 0, 0],
+    "diffColor": [255, 0, 255]
+  },
+  "sut":{
+    "baseVersion": 5.95,
+    "rcVersion": 5.96,
+    "testName": "E010-correo-repetido",
+    "evidence":{
+      "baseDirectory": "evidence",
+      "targetDirectory": "results_vr"
+    }
+  }
+}

@@ -1,6 +1,10 @@
 # Node modules
 Playwright/node_modules/
 Kraken/node_modules/
+/ResembleVR/node_modules/
+
+# JetBrains Files
+.idea
 
 # Playwright specific files and folders
 Playwright/.playwright/
@@ -27,3 +31,8 @@ Playwright/build/
 Playwright/screenshots/
 Playwright/videos/
 
+# Evidencias, fotos, etc.
+/PlaywrightAlvaro/evidence/
+/ResembleVR/evidence/
+/ResembleVR/results_vr/
+**.iml
