@@ -1,0 +1,16 @@
+{
+  "name": "resemblevr",
+  "version": "1.0.0",
+  "description": "Pruebas de regresión visual de Ghost (4.5 --> 5.96)",
+  "main": "index-sample.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "playwright": "^1.48.2",
+    "resemblejs": "^5.0.0"
+  }
+}
