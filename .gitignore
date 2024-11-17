@@ -34,5 +34,5 @@ Playwright/videos/
 # Evidencias, fotos, etc.
 /PlaywrightAlvaro/evidence/
 /ResembleVR/evidence/
-/ResembleVR/results/
+/ResembleVR/results_vr/
 **.iml
