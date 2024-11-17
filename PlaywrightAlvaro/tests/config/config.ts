@@ -5,5 +5,9 @@ export const config = {
 
     membersPage: {
         resource: `ghost/#/members`
+    },
+
+    sut: {
+        version: 5.96
     }
 }
