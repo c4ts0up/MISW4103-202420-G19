@@ -1,6 +1,6 @@
 export const config = {
     evidence: {
-        baseDirectory: 'test-results/evidence'
+        baseDirectory: 'evidence'
     },
 
     loginPage: {

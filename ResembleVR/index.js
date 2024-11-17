@@ -2,18 +2,22 @@ const fs = require('fs').promises;
 const path = require('path');
 const compareImages = require("resemblejs/compareImages");
 const config = require("./config.json");
-const { options } = config;
+const { testRunEvidencePath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
+const { browsers, options } = config;
+const { createReport } = require('./src/view');
 
 /**
  * Carga las imágenes de una versión de la APB y ejecución específicas
  *
  * @param sutVersion versión de APB
+ * @param browserName nombre del navegador donde se ejecuta
  * @param testName nombre del test e imágenes ejecutadas
  * @returns {Promise<*[]>} promesa de un arreglo de image buffers
  */
-async function loadScreenshots(sutVersion, testName) {
+async function loadScreenshots(sutVersion, browserName, testName) {
     const imageList = [];
-    const directoryPath = `./results/${sutVersion}/${testName}`;
+    const directoryPath = testRunEvidencePath(sutVersion, browserName, testName);
+    console.log(`Cargando las imágenes de ${directoryPath} ...`);
 
     try {
         // Read all files in the directory asynchronously
@@ -50,6 +54,7 @@ async function visualRegression(
     imageBase,
     imageRc
 ) {
+    console.log(`Calculando regresión visual ..`);
     const data = await compareImages(
         imageBase,
         imageRc,
@@ -65,56 +70,66 @@ async function visualRegression(
             diffBounds: data.diffBounds,
             analysisTime: data.analysisTime
         },
-        await data.buffer()
+        await data.getBuffer()
     ];
 }
 
 /**
  * Guarda la comparación de dos imágenes
  * @param buff buffer de la comparación de imágenes
+ * @param browserName nombre del navegador donde se ejecutó la prueba
  * @param timestamp timestamp del análisis
- * @param testName nombre de las pruebas para guardar bajo directorio
+ * @param testIdentifier
+ * @param screenshotIdentifier
  * @returns {Promise<void>}
  */
 async function saveComparison(
     buff,
+    browserName,
     timestamp,
-    testName
+    testIdentifier,
+    screenshotIdentifier
 ) {
-    const comparisonDirectory = `./results/vr/${timestamp}/${testName}.compare.png`;
-    await fs.writeFile(comparisonDirectory, buff);
+    console.log(`Guardando la regresión visual del screenshot # ${testIdentifier}/${screenshotIdentifier} ...`);
+    await fs.writeFile(comparisonImagePath(
+            browserName,
+            timestamp,
+            testIdentifier,
+            `${screenshotIdentifier}.compare.png`
+        ),
+        buff
+    );
 }
 
 /**
  * Guarda el reporte final creado con HTML/CSS/ResembleJS
- * @param baseVersion versión base de la ABP
- * @param rcVersion versión RC de la ABP
+ * @param browserName
  * @param testName nombre de la prueba a comparar
  * @param timestamp timestamp de la prueba de regresión visual
  * @param report reporte a guardar
  * @returns {Promise<void>}
  */
 async function saveReport(
-    baseVersion,
-    rcVersion,
-    testName,
+    browserName,
     timestamp,
+    testName,
     report
 ) {
-    const reportDirectory = `./results/vr/${timestamp}/report.html`;
-    await fs.writeFile(reportDirectory, report);
-    await fs.copyFile('./index.css', `./results/vr/${timestamp}/index.css`);
+    await fs.writeFile(reportPath(browserName, timestamp, testName), report);
+    await fs.copyFile('./index.css', cssPath(browserName, timestamp, testName));
 }
 
 
 /**
- * Entrypoint del análisis de regresión visual
+ * Análisis de regresión visual para un escenario específico
+ * @param browserName navegador donde se ejecutó la prueba
  * @param baseVersion versión base de la ABP
  * @param rcVersion versión RC de la ABP
  * @param testName nombre de la prueba a comparar
  * @returns {Promise<void>}
  */
 async function visualRegressionAnalysis(
+    browserName,
     baseVersion,
     rcVersion,
     testName
@@ -122,10 +137,8 @@ async function visualRegressionAnalysis(
     const timestamp = new Date().toISOString().replace(/:/g,".");
 
     // carga las imágenes de ambos
-    console.log(`Cargando las imágenes de ${baseVersion}/${testName} ...`);
-    const baseScreenshots = await loadScreenshots(baseVersion, testName);
-    console.log(`Cargando las imágenes de ${rcVersion}/${testName} ...`);
-    const rcScreenshots = await loadScreenshots(rcVersion, testName);
+    const baseScreenshots = await loadScreenshots(baseVersion, browserName, testName);
+    const rcScreenshots = await loadScreenshots(rcVersion, browserName, testName);
 
     // compara que las imágenes sean de igual longitud
     if (baseScreenshots.length !== rcScreenshots.length) {
@@ -138,65 +151,31 @@ async function visualRegressionAnalysis(
 
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
-        console.log(`Calculando la regresión visual del screenshot # ${i} ...`);
         let [ results, buffer ] = await visualRegression(baseScreenshots[i], rcScreenshots[i]);
-        console.log(`Guardando la regresión visual del screenshot # ${i} ...`);
-        await saveComparison(buffer, timestamp, testName);
+        await saveComparison(buffer, browserName, timestamp, testName, i.toString());
         resultInfo.push(results);
     }
 
     console.log(`Creando reporte ...`);
     const report = createReport(testName, resultInfo);
     console.log(`Guardando reporte ...`);
-    await saveReport(baseVersion, rcVersion, testName, timestamp, report);
-}
-(async ()=> console.log(await visualRegressionAnalysis(
-    config.sut.baseVersion,
-    config.sut.rcVersion,
-    config.sut.testName
-)))();
-
-function browser(b, info){
-    return `<div class=" browser" id="test0">
-    <div class=" btitle">
-        <h2>Browser: ${b}</h2>
-        <p>Data: ${JSON.stringify(info)}</p>
-    </div>
-    <div class="imgline">
-      <div class="imgcontainer">
-        <span class="imgname">Reference</span>
-        <img class="img2" src="before-${b}.png" id="refImage" label="Reference">
-      </div>
-      <div class="imgcontainer">
-        <span class="imgname">Test</span>
-        <img class="img2" src="after-${b}.png" id="testImage" label="Test">
-      </div>
-    </div>
-    <div class="imgline">
-      <div class="imgcontainer">
-        <span class="imgname">Diff</span>
-        <img class="imgfull" src="./compare-${b}.png" id="diffImage" label="Diff">
-      </div>
-    </div>
-  </div>`
+    await saveReport(browserName, timestamp, testName, report);
 }
 
 
-function createReport(id, resInfo){
-    return `
-    <html>
-        <head>
-            <title> VRT Report </title>
-            <link href="index.css" type="text/css" rel="stylesheet">
-        </head>
-        <body>
-            <h1>Report for 
-                 <a href="${config.url}"> ${config.url}</a>
-            </h1>
-            <p>Executed: ${id}</p>
-            <div id="visualizer">
-                ${config.browsers.map(b=>browser(b, resInfo[b]))}
-            </div>
-        </body>
-    </html>`
+/**
+ * Entrypoint
+ * @returns {Promise<void>}
+ */
+async function traverseEvidence() {
+    for (const b of browsers) {
+        console.log(await visualRegressionAnalysis(
+            b,
+            config.sut.baseVersion,
+            config.sut.rcVersion,
+            config.sut.testName
+        ));
+    }
 }
+
+(async ()=> console.log(await traverseEvidence()))();
