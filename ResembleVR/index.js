@@ -1,42 +1,12 @@
 const fs = require('fs').promises;
 const path = require('path');
-const compareImages = require("resemblejs/compareImages");
+
 const config = require("./config.json");
 const { resultsPath, testRunEvidencePath, comparisonImagePath, reportPath, cssPath} = require("./src/utils");
-const { browsers, options } = config;
-const { createReport } = require('./src/view');
+const { createReport } = require('./src/webreport');
 const { loadScreenshots, loadEvidenceNames} = require('./src/evidences');
-
-/**
- * Compara y retorna los resultados de comparar dos imágenes en ResembleJS
- *
- * @returns {Promise<{diffBounds: ({top: *, left: *, bottom: number, right: number}|*), analysisTime: *, isSameDimensions: (boolean|*), rawMisMatchPercentage: *, misMatchPercentage: *, dimensionDifference: *}>} promesa de valores de análisis usados para comparar las imágenes
- * @param imageBase screenshot de ABP en versión base
- * @param imageRc screenshot de ABP en versión RC
- */
-async function visualRegression(
-    imageBase,
-    imageRc
-) {
-    console.log(`Calculando regresión visual ..`);
-    const data = await compareImages(
-        imageBase,
-        imageRc,
-        options
-    )
-
-    return [
-        {
-            isSameDimensions: data.isSameDimensions,
-            dimensionDifference: data.dimensionDifference,
-            rawMisMatchPercentage: data.rawMisMatchPercentage,
-            misMatchPercentage: data.misMatchPercentage,
-            diffBounds: data.diffBounds,
-            analysisTime: data.analysisTime
-        },
-        await data.getBuffer()
-    ];
-}
+const { resembleRegression } = require('./src/service');
+const { browsers } = require('./config.json');
 
 /**
  * Guarda la comparación de dos imágenes
@@ -167,7 +137,7 @@ async function analyzeCase(
 
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
-        let [ results, buffer ] = await visualRegression(baseScreenshots[i], rcScreenshots[i]);
+        let [ results, buffer ] = await resembleRegression(baseScreenshots[i], rcScreenshots[i]);
         await saveComparison(buffer, browserName, timestamp, testName, baseImageNames[i]);
         resultInfo[baseImageNames[i]] = results;
     }

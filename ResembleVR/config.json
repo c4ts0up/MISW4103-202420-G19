@@ -1,5 +1,5 @@
 {
-  "url":"https://monitor177.github.io/color-palette/",
+  "url":"http://localhost:3001",
   "browsers":["chromium", "firefox"],
   "options":{
     "output": {
@@ -21,7 +21,7 @@
   "sut":{
     "baseVersion": 5.95,
     "rcVersion": 5.96,
-    "testName": "E007-delete-member",
+    "testName": "E010-correo-repetido",
     "evidence":{
       "baseDirectory": "evidence",
       "targetDirectory": "results/vr"
