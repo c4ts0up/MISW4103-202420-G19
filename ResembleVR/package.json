@@ -1,10 +1,12 @@
 {
-  "name": "resemblevr",
-  "version": "1.0.0",
-  "description": "Pruebas de regresión visual de Ghost (4.5 --> 5.96)",
+  "name": "ghost-vr",
+  "version": "1.1.0",
+  "description": "Herramienta de pruebas de regresión visual basados en evidencias",
   "main": "index-sample.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "resemble-vr": "node resembleVR.js",
+    "pixelmatch-vr": "node pixelmatchVR.js"
   },
   "author": "",
   "license": "ISC",
