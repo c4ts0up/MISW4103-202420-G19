@@ -146,15 +146,15 @@ async function analyzeCase(
 
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
-        const numDiffs = await pixelmatchRegression(
+        const [img, numDiffs] = await pixelmatchRegression(
             baseScreenshots[i].data,
             rcScreenshots[i].data,
-            diffs[i].data,
             widths[i],
             heights[i]
         );
+        diffs[i].data = img;
         await saveComparison(
-            PNG.sync.write(diffs[i]),
+            PNG.sync.write(diffs[i].data),
             browserName,
             timestamp,
             testName,

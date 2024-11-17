@@ -9,6 +9,7 @@ const config = require("../config.json");
 const { options } = config;
 
 const pmConfig = require("../pixelmatch.json");
+const {PNG} = require("pngjs");
 const { pixelmatchOptions } = pmConfig;
 
 /**
@@ -48,20 +49,22 @@ async function resembleRegression(
  * @returns {Promise<{diffBounds: ({top: *, left: *, bottom: number, right: number}|*), analysisTime: *, isSameDimensions: (boolean|*), rawMisMatchPercentage: *, misMatchPercentage: *, dimensionDifference: *}>} promesa de valores de análisis usados para comparar las imágenes
  * @param imageBase screenshot de ABP en versión base
  * @param imageRc screenshot de ABP en versión RC
- * @param diff
  * @param width
  * @param height
  */
 async function pixelmatchRegression(
     imageBase,
     imageRc,
-    diff,
     width,
     height
 ) {
+    let output = new PNG( { width, height });
     const pixelmatch = await import('pixelmatch').then(mod => mod.default);
-    pixelmatch(imageBase, imageRc, diff, width, height, pixelmatchOptions);
-    return diff;
+    let res = pixelmatch(imageBase, imageRc, output.data, width, height, pixelmatchOptions);
+    return [
+        output,
+        res
+    ]
 }
 
 module.exports = {
