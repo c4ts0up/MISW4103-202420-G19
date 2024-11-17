@@ -16,6 +16,9 @@ export async function myScreenshot(
     const ssPath = `./results/${sutVersion}/${testName}/${step}.png`;
     console.log(`Screenshot ${step} --> ${ssPath}`);
 
+    // fuerza la espera para cargar toda la página
+    await page.waitForLoadState("load");
+
     await page.screenshot({
         path: ssPath
     });

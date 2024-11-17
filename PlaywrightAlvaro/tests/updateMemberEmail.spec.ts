@@ -28,9 +28,7 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Saved"
      */
     const e8 = 'E008-correo-valido';
-    test(e8, async ( { page } ) => {
-        let stepCount = 1;
-
+    test(e8, async ( { page, browserName } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -38,27 +36,22 @@ test.describe('F5', async () => {
         const mockValidEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-        await myScreenshot(page, config.sut.version, e8, stepCount.toString());
-        stepCount++;
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
-        await myScreenshot(page, config.sut.version, e8, stepCount.toString());
-        stepCount++;
 
         // AND hay un miembro creado
         await membersPage.createMember(
             mockName,
             mockEmail
         );
-        await myScreenshot(page, config.sut.version, e8, stepCount.toString());
-        stepCount++;
         await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, config.sut.version, e8, "before");
 
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
-        await myScreenshot(page, config.sut.version, e8, stepCount.toString());
-        stepCount++;
 
         // AND cambio el correo por un correo válido
         // AND guardo la edición del miembro
@@ -67,8 +60,9 @@ test.describe('F5', async () => {
             mockName,
             mockValidEmail
         );
-        await myScreenshot(page, config.sut.version, e8, stepCount.toString());
-        stepCount++;
+
+        // after screenshot
+        await myScreenshot(page, config.sut.version, e8, "after");
 
         // THEN se debería mostrar el mensaje "Saved"
         expect(saveButtonResponse.trim()).toEqual('Saved');
@@ -94,8 +88,6 @@ test.describe('F5', async () => {
      */
     const e9 = "E009-correo-invalido"
     test(e9, async ( { page } ) => {
-        let stepCount = 1;
-
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -103,27 +95,22 @@ test.describe('F5', async () => {
         const mockInvalidEmail = faker.word.noun();
 
         // GIVEN estoy loggeado como administrador
-        await myScreenshot(page, config.sut.version, e9, stepCount.toString());
-        stepCount++;
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
-        await myScreenshot(page, config.sut.version, e9, stepCount.toString());
-        stepCount++;
 
         // AND hay un miembro creado
         await membersPage.createMember(
             mockName,
             mockEmail
         );
-        await myScreenshot(page, config.sut.version, e9, stepCount.toString());
-        stepCount++;
         await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, config.sut.version, e9, "before");
 
         // WHEN selecciono un miembro
         const selectedMember = await membersPage.findMember(mockEmail);
-        await myScreenshot(page, config.sut.version, e9, stepCount.toString());
-        stepCount++;
 
         // AND cambio el correo por un correo inválido
         // AND guardo la edición del miembro
@@ -132,8 +119,9 @@ test.describe('F5', async () => {
             mockName,
             mockInvalidEmail
         );
-        await myScreenshot(page, config.sut.version, e9, stepCount.toString());
-        stepCount++;
+
+        // after screenshot
+        await myScreenshot(page, config.sut.version, e9, "after");
 
         // THEN se debería mostrar el mensaje "Retry"
         expect(saveButtonResponse.trim()).toEqual('Retry');
@@ -163,8 +151,6 @@ test.describe('F5', async () => {
      */
     const e10 = "E010-correo-repetido";
     test(e10, async ( { page } ) => {
-        let stepCount = 1;
-
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const xMockName = faker.person.fullName();
@@ -173,13 +159,10 @@ test.describe('F5', async () => {
         const yMockEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
+
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
 
         // AND hay un miembro X creado
         const saveButtonResponseMemberX = await membersPage.createMember(
@@ -187,8 +170,6 @@ test.describe('F5', async () => {
             xMockEmail
         );
         expect(saveButtonResponseMemberX.trim()).toEqual('Saved');
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
         await membersPage.navigateTo();
 
         // AND hay un miembro Y creado
@@ -197,14 +178,13 @@ test.describe('F5', async () => {
             yMockEmail
         );
         expect(saveButtonResponseMemberY.trim()).toEqual('Saved');
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
         await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, config.sut.version, e10, "before");
 
         // WHEN selecciono el miembro Y
         const yMember = await membersPage.findMember(yMockEmail);
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
         // AND cambio el correo por el correo de X
         // AND guardo la edición del miembro
         const saveButtonResponse = await membersPage.editMember(
@@ -212,8 +192,9 @@ test.describe('F5', async () => {
             yMockName,
             xMockEmail
         )
-        await myScreenshot(page, config.sut.version, e10, stepCount.toString());
-        stepCount++;
+
+        // after screenshot
+        await myScreenshot(page, config.sut.version, e10, "after");
 
         // THEN se debería mostrar el mensaje "Retry"
         // FIXME: la aplicación muestra brevemente (~50 ms) "Saved", antes de cambiar a "Retry"
