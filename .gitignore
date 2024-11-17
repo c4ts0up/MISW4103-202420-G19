@@ -1,7 +1,7 @@
 # Node modules
 Playwright/node_modules/
 Kraken/node_modules/
-/ResembleVR/node_modules/
+/VR/node_modules/
 
 # JetBrains Files
 .idea
@@ -33,6 +33,6 @@ Playwright/videos/
 
 # Evidencias, fotos, etc.
 /PlaywrightAlvaro/evidence/
-/ResembleVR/evidence/
-/ResembleVR/results_vr/
+/VR/evidence/
+/VR/results_vr/
 **.iml
