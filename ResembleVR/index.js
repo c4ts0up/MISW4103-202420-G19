@@ -54,16 +54,35 @@ async function saveComparison(
     testIdentifier,
     screenshotIdentifier
 ) {
-    console.log(`Guardando la regresión visual del screenshot # ${testIdentifier}/${screenshotIdentifier} ...`);
-    await fs.writeFile(comparisonImagePath(
-            browserName,
-            timestamp,
-            testIdentifier,
-            `compare-${screenshotIdentifier}`
-        ),
-        buff
+    const path = comparisonImagePath(
+        browserName,
+        timestamp,
+        testIdentifier,
+        `compare-${screenshotIdentifier}`
     );
+
+    console.log(`Guardando la regresión visual del screenshot # ${path} ...`);
+    await fs.writeFile(path, buff);
 }
+
+async function saveScreenshot(
+    browserName,
+    timestamp,
+    testIdentifier,
+    screenshotIdentifier,
+    screenshot
+) {
+    const path = comparisonImagePath(
+        browserName,
+        timestamp,
+        testIdentifier,
+        `${screenshotIdentifier}`
+    );
+
+    console.log(`Guardando el screenshot # ${path} ...`);
+    await fs.writeFile(path, screenshot);
+}
+
 
 /**
  * Guarda el reporte final creado con HTML/CSS/ResembleJS
@@ -126,22 +145,35 @@ async function analyzeCase(
     const baseScreenshots = await loadScreenshots(baseVersion, browserName, testName, baseImageNames);
     const rcScreenshots = await loadScreenshots(rcVersion, browserName, testName, rcImageNames);
 
-    // compara que las imágenes sean de igual longitud
-    if (baseScreenshots.length !== rcScreenshots.length) {
-
+    // guarda los screenshots de prueba
+    for (let i=0; i<baseImageNames.length; i++) {
+        await saveScreenshot(
+            browserName,
+            timestamp,
+            testName,
+            `base-${baseImageNames[i]}`,
+            baseScreenshots[i]
+        );
+        await saveScreenshot(
+            browserName,
+            timestamp,
+            testName,
+            `rc-${rcImageNames[i]}`,
+            rcScreenshots[i]
+        );
     }
 
-    let resultInfo = [];
+    let resultInfo = {};
 
     // guarda los datos
     for (let i=0; i<baseScreenshots.length; i++) {
         let [ results, buffer ] = await visualRegression(baseScreenshots[i], rcScreenshots[i]);
         await saveComparison(buffer, browserName, timestamp, testName, baseImageNames[i]);
-        resultInfo.push(results);
+        resultInfo[baseImageNames[i]] = results;
     }
 
     console.log(`Creando reporte ...`);
-    const report = createReport(testName, resultInfo);
+    const report = createReport(browserName, testName, resultInfo, baseImageNames);
     console.log(`Guardando reporte ...`);
     await saveReport(browserName, timestamp, testName, report);
 }

@@ -1,34 +1,39 @@
 const config = require("../config.json");
 const { viewportHeight, viewportWidth, browsers, options } = config;
 
-// FIXME: resolver esto
-function browser(b, info){
+function browser(b, info, imageNames){
     return `<div class=" browser" id="test0">
     <div class=" btitle">
-        <h2>Browser: ${b}</h2>
-        <p>Data: ${JSON.stringify(info)}</p>
+        <h3>Browser: ${b}</h3>
     </div>
-    <div class="imgline">
-      <div class="imgcontainer">
-        <span class="imgname">Reference</span>
-        <img class="img2" src="before-${b}.png" id="refImage" label="Reference">
-      </div>
-      <div class="imgcontainer">
-        <span class="imgname">Test</span>
-        <img class="img2" src="after-${b}.png" id="testImage" label="Test">
-      </div>
-    </div>
-    <div class="imgline">
-      <div class="imgcontainer">
-        <span class="imgname">Diff</span>
-        <img class="imgfull" src="./compare-${b}.png" id="diffImage" label="Diff">
-      </div>
-    </div>
+    ${imageNames.map((im)=>state(im, info[im]))}
   </div>`
 }
 
+function state(imageName, info) {
+    return `
+    <h4>Screenshot identifier: ${imageName}</h4>
+    <p>Data: ${JSON.stringify(info)}</p>
+    <div class="imgline">
+        <div class="imgcontainer">
+            <span class="imgname">Reference</span>
+            <img class="img2" src="base-${imageName}" id="refImage" label="Reference">
+        </div>
+        <div class="imgcontainer">
+            <span class="imgname">Test</span>
+            <img class="img2" src="rc-${imageName}" id="testImage" label="Test">
+        </div>
+    </div>
+    <div class="imgline">
+        <div class="imgcontainer">
+            <span class="imgname">Diff</span>
+            <img class="imgfull" src="compare-${imageName}" id="diffImage" label="Diff">
+        </div>
+    </div>`
+}
 
-function createReport(id, resInfo){
+
+function createReport(currentBrowser, id, resInfo, imageNames){
     return `
     <html>
         <head>
@@ -39,9 +44,9 @@ function createReport(id, resInfo){
             <h1>Report for 
                  <a href="${config.url}"> ${config.url}</a>
             </h1>
-            <p>Executed: ${id}</p>
+            <h2>Executed: ${id}</h2>
             <div id="visualizer">
-                ${config.browsers.map(b=>browser(b, resInfo[b]))}
+                ${browser(currentBrowser, resInfo, imageNames)}
             </div>
         </body>
     </html>`
