@@ -6,6 +6,7 @@
 
 const config = require('../config.json');
 const fs = require('fs');
+const path = require('path');
 
 
 /**
@@ -13,38 +14,34 @@ const fs = require('fs');
  * @param directories lista de directorios
  */
 function concatanatePaths(directories) {
-    return "./" + directories.join('/')
+    return path.join('.', ...directories);
 }
 
 /**
- * Crea el path para un screenshot
- * @param basePath path base para los screenshots (e.g `./results`)
- * @param version versión de la app (e.g `5.96`)
- * @param browserName nombre del navegador (e.g `chromium`)
- * @param testName nombre de la prueba (e.g `E000 - Mi primera prueba`)
- * @param screenshotIdentifier identificador sin extensión del screenshot (e.g `after`)
- * @returns string path para guardar el screenshot
+ * Path para las evidencias de una ejecución de tests
+ * @param sutVersion versión de la ABP
+ * @param browserName nombre del navegador usado
+ * @param testIdentifier identificador del test
+ * @returns string
  */
-function screenshotPath(
-    basePath,
-    version,
-    browserName,
-    testName,
-    screenshotIdentifier
-) {
-    return concatanatePaths([basePath, version.toString(), browserName, testName, `${screenshotIdentifier}.png`]);
-}
-
 function testRunEvidencePath(sutVersion, browserName, testIdentifier) {
     return concatanatePaths([
         config.sut.evidence.baseDirectory,
-        sutVersion,
+        sutVersion.toString(),
         browserName,
         testIdentifier
     ])
 }
 
 
+/**
+ * Path para guardar la imagen de comparación
+ * @param browserName nombre del navegador
+ * @param timestamp timestamp de la ejecución
+ * @param testIdentifier identificador del test
+ * @param screenshotIdentifier identificador del screenshot tomado
+ * @returns {string | *}
+ */
 function comparisonImagePath(browserName, timestamp, testIdentifier, screenshotIdentifier) {
     return concatanatePaths([
         config.sut.evidence.targetDirectory,
@@ -55,33 +52,35 @@ function comparisonImagePath(browserName, timestamp, testIdentifier, screenshotI
     ])
 }
 
+/**
+ * Directorios para construir el path de resultados
+ * @param browserName
+ * @param timestamp
+ * @param testIdentifier
+ * @returns {(string|*)[]}
+ */
+function resultsDirectories(browserName, timestamp, testIdentifier) {
+    return [config.sut.evidence.targetDirectory, browserName, timestamp, testIdentifier];
+}
+
+
+/**
+ * Path para guardar los resultados
+ * @param browserName
+ * @param timestamp
+ * @param testIdentifier
+ * @returns {string | *}
+ */
 function resultsPath(browserName, timestamp, testIdentifier) {
-    return concatanatePaths([
-        config.sut.evidence.targetDirectory,
-        browserName,
-        timestamp,
-        testIdentifier
-    ])
+    return concatanatePaths(resultsDirectories(browserName, timestamp, testIdentifier));
 }
 
 function reportPath(browserName, timestamp, testIdentifier) {
-    return concatanatePaths([
-        config.sut.evidence.targetDirectory,
-        browserName,
-        timestamp,
-        testIdentifier,
-        'report.html'
-    ])
+    return concatanatePaths([...resultsDirectories(browserName, timestamp, testIdentifier), 'report.html']);
 }
 
 function cssPath(browserName, timestamp, testIdentifier) {
-    return concatanatePaths([
-        config.sut.evidence.targetDirectory,
-        browserName,
-        timestamp,
-        testIdentifier,
-        'index.css'
-    ])
+    return concatanatePaths([...resultsDirectories(browserName, timestamp, testIdentifier), 'index.css']);
 }
 
 module.exports = {

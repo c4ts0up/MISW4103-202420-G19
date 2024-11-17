@@ -1,6 +1,7 @@
 const config = require("../config.json");
 const { viewportHeight, viewportWidth, browsers, options } = config;
 
+// FIXME: resolver esto
 function browser(b, info){
     return `<div class=" browser" id="test0">
     <div class=" btitle">
