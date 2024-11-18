@@ -12,6 +12,6 @@ export const config = {
     },
 
     sut: {
-        version: 5.96
+        version: 4.5
     }
 }
