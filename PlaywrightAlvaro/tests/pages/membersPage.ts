@@ -10,18 +10,7 @@ class MembersPage extends BasePage {
     private readonly newMemberLabel = "New member";
     private readonly nameInputLabel = "Name";
     private readonly emailInputLabel = "Email";
-
-    // fields
-    private readonly nameInput = "input[data-test-input='member-name']";
-    private readonly emailInput = "input[data-test-input='member-email']";
-
-    // buttons
-    private confirmDeleteMemberButton = "button[data-test-button='confirm']"
-
-    // cubre el botón de Save
-    private readonly saveButton = "button[data-test-button='save']"
-    private readonly memberActionsButton = "button[data-test-button='member-actions']";
-    private readonly deleteMemberButton = "button[data-test-button='delete-member']";
+    private readonly deleteMemberLabel = "Delete member";
 
     constructor(page: Page, resource: string) {
         super(page, resource);
@@ -58,30 +47,43 @@ class MembersPage extends BasePage {
 
     async inputName(newName: string) {
         await expect(this.page.getByLabel(this.nameInputLabel)).toBeVisible()
-        await this.page.fill(this.nameInput, newName);
+        await this.page.getByLabel(this.nameInputLabel).fill(newName);
     }
 
     async inputEmail(newEmail: string) {
         await expect(this.page.getByLabel(this.emailInputLabel)).toBeVisible();
-        await this.page.fill(this.emailInput, newEmail);
+        await this.page.getByLabel(this.emailInputLabel).fill(newEmail)
     }
 
     async saveMemberChanges() {
-        const buttonLocator = this.page.locator(this.saveButton);
-        const initialText = await buttonLocator.textContent();
+        const spanSave = this.page
+            .locator('span')
+            .filter({
+                hasText: /Save|Saved|Retry/
+            });
 
-        await buttonLocator.click();
-        await expect(buttonLocator).not.toHaveText(initialText);
+        const initialText = await spanSave.textContent();
 
-        return await buttonLocator.textContent();
+        await spanSave.click();
+
+        await expect(spanSave).not.toHaveText(initialText);
+
+        return await spanSave.textContent();
     }
 
     async saveChangesTest() {
         await this.page
-            .locator(this.saveButton)
+            .locator('span')
+            .filter({
+                hasText: /Save|Saved|Retry/
+            })
             .click()
 
-        return this.page.locator(this.saveButton);
+        return this.page
+            .locator('span')
+            .filter({
+                hasText: /Save|Saved|Retry/
+            });
     }
 
     async createMember(memberName: string, memberEmail: string) {
@@ -105,19 +107,15 @@ class MembersPage extends BasePage {
         // selecciona el miembro
         await memberElement.click();
 
-        // clic en member actions
-        await this.page
-            .locator(this.memberActionsButton)
-            .click();
-
         // clic en delete member
         await this.page
-            .locator(this.deleteMemberButton)
+            .getByText(this.deleteMemberLabel)
             .click();
 
         // clic en confirmar
         await this.page
-            .locator(this.confirmDeleteMemberButton)
+            .getByText(this.deleteMemberLabel, {exact: true})
+            .nth(1)
             .click();
     }
 
@@ -126,8 +124,12 @@ class MembersPage extends BasePage {
             .getByLabel(this.emailInputLabel);
     }
 
-    async getEmailSaveResponse() {
-        return this.page.locator('div[class$=\'error\'] p.response');
+    async getEmailSaveResponse(isAlert: boolean) {
+        if (isAlert) {
+            return this.page.locator('div[class=\'gh-alert-content\']');
+        } else {
+            return this.page.locator('p.response').filter({hasText: 'Invalid Email.'});
+        }
     }
 
     async checkRedirection(desiredResource: string) {

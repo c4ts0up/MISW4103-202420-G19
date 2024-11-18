@@ -210,7 +210,7 @@ test.describe('F5', async () => {
         // THEN se debería mostrar el mensaje "Retry"
         expect(saveButtonResponse.trim()).toEqual('Retry');
         // AND se debería mostrar el mensaje "Invalid Email."
-        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse(false);
         await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
         // AND no se debería guardar el nuevo correo
         await membersPage.reload();
@@ -239,7 +239,7 @@ test.describe('F5', async () => {
      * AND cambio el correo por el correo de X
      * AND guardo la edición del miembro
      * THEN se debería mostrar el mensaje "Retry"
-     * AND se debería mostrar el mensaje "Member already exists. Attempting to add member with existing email address"
+     * AND se debería mostrar el mensaje "Validation error, cannot save member. Member already exists Attempting to add member with existing email address."
      * AND no se debería guardar el nuevo correo
      */
     const e10 = "E010-correo-repetido";
@@ -348,11 +348,11 @@ test.describe('F5', async () => {
             )
         );
 
-        // AND se debería mostrar el mensaje "Member already exists. Attempting to add member with existing email address"
+        // AND se debería mostrar el mensaje "Validation error, cannot save member. Member already exists Attempting to add member with existing email address."
         const getEmailSaveResponse = await membersPage
-            .getEmailSaveResponse();
+            .getEmailSaveResponse(true);
         await expect(getEmailSaveResponse).toContainText(
-            'Member already exists. Attempting to edit member with existing email address'
+            'Validation error, cannot edit member. Member already exists Attempting to edit member with existing email address.'
         );
         // AND no se debería guardar el nuevo correo
         await membersPage.reload();
