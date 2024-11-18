@@ -17,6 +17,20 @@
 Clone este repositorio utilizando la URL HTTPs con el comando
 `git clone <repository_url>`
 
+## Estructura del Proyecto
+El repositorio está dividido en dos ramas principales, que representan las versiones del código que se analizaron para la Aplicación Bajo Pruebas (ABP):
+
+`version/5.96.0`: Contiene el código para realizar las pruebas en la versión 5.96.0
+`version/4.5.0`: Contiene el código para realizar las pruebas en la versión 4.5.0
+
+## Pruebas de Regresión Visual
+El repositorio incluye un conjunto de pruebas de regresión visual que permiten comparar visualmente las diferencias entre ejecuciones.
+
+Instrucciones para las pruebas de regresión visual:
+1. Dirígete a la carpeta `VR` dentro del proyecto.
+2. Allí encontrarás un archivo `README.md` con las instrucciones detalladas para configurar y ejecutar las pruebas visuales.
+3. Sigue los pasos descritos en ese archivo para realizar las pruebas de regresión visual
+
 ## Pruebas en Kraken
 Para ejecutar las pruebas en kraken debe seguir los siguientes pasos:
 
