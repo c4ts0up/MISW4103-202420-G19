@@ -37,16 +37,41 @@ test.describe('F5', async () => {
         const mockValidEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "01-login"
+            )
+        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "02-pagina-miembros"
+            )
+        );
 
         // AND hay un miembro creado
         await membersPage.createMember(
             mockName,
             mockEmail
         );
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "03-miembro-creado"
+            )
+        );
         await membersPage.navigateTo();
+
 
         // before screenshot
         await myScreenshot(page, screenshotPath(
@@ -54,7 +79,7 @@ test.describe('F5', async () => {
                 config.sut.version,
                 browserName,
                 e8,
-                "before"
+                "04-before-when"
             )
         );
 
@@ -68,15 +93,12 @@ test.describe('F5', async () => {
             mockName,
             mockValidEmail
         );
-
-        // after screenshot
-        // before screenshot
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
                 e8,
-                "after"
+                "05-edit-member"
             )
         );
 
@@ -86,6 +108,15 @@ test.describe('F5', async () => {
         await membersPage.reload();
         const emailInput = await membersPage.getEmailInputLocator();
         await expect(emailInput).toHaveValue(mockValidEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e8,
+                "06-after-validations"
+            )
+        );
     });
 
 
@@ -111,14 +142,38 @@ test.describe('F5', async () => {
         const mockInvalidEmail = faker.word.noun();
 
         // GIVEN estoy loggeado como administrador
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "01-login"
+            )
+        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "02-pagina-miembros"
+            )
+        );
 
         // AND hay un miembro creado
         await membersPage.createMember(
             mockName,
             mockEmail
+        );
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "03-miembro-creado"
+            )
         );
         await membersPage.navigateTo();
 
@@ -128,7 +183,7 @@ test.describe('F5', async () => {
                 config.sut.version,
                 browserName,
                 e9,
-                "before"
+                "04-before-when"
             )
         );
 
@@ -142,14 +197,13 @@ test.describe('F5', async () => {
             mockName,
             mockInvalidEmail
         );
-
         // after screenshot
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
                 e9,
-                "after"
+                "05-edit-member"
             )
         );
 
@@ -162,6 +216,15 @@ test.describe('F5', async () => {
         await membersPage.reload();
         const emailInput = await membersPage.getEmailInputLocator();
         await expect(emailInput).toHaveValue(mockEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "06-after-validations"
+            )
+        );
     });
 
 
@@ -189,10 +252,25 @@ test.describe('F5', async () => {
         const yMockEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "01-login"
+            )
+        );
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "02-pagina-miembros"
+            )
+        );
 
         // AND hay un miembro X creado
         const saveButtonResponseMemberX = await membersPage.createMember(
@@ -200,6 +278,14 @@ test.describe('F5', async () => {
             xMockEmail
         );
         expect(saveButtonResponseMemberX.trim()).toEqual('Saved');
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "03-miembro-x-creado"
+            )
+        );
         await membersPage.navigateTo();
 
         // AND hay un miembro Y creado
@@ -208,6 +294,14 @@ test.describe('F5', async () => {
             yMockEmail
         );
         expect(saveButtonResponseMemberY.trim()).toEqual('Saved');
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "04-miembro-y-creado"
+            )
+        );
         await membersPage.navigateTo();
 
         // before screenshot
@@ -216,7 +310,7 @@ test.describe('F5', async () => {
                 config.sut.version,
                 browserName,
                 e10,
-                "before"
+                "05-before-when"
             )
         );
 
@@ -229,14 +323,13 @@ test.describe('F5', async () => {
             yMockName,
             xMockEmail
         )
-
         // after screenshot
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
                 e10,
-                "after"
+                "06-edit-member"
             )
         );
 
@@ -245,6 +338,15 @@ test.describe('F5', async () => {
         expect(membersPage.saveChangesTest())
         const saveButton = await membersPage.saveChangesTest();
         await expect(saveButton).toContainText('Retry')
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "07-mensaje-retry"
+            )
+        );
 
         // AND se debería mostrar el mensaje "Member already exists. Attempting to add member with existing email address"
         const getEmailSaveResponse = await membersPage
@@ -256,6 +358,15 @@ test.describe('F5', async () => {
         await membersPage.reload();
         const emailInput = await membersPage.getEmailInputLocator();
         await expect(emailInput).toHaveValue(yMockEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e10,
+                "08-after-validations"
+            )
+        );
     });
 });
 
