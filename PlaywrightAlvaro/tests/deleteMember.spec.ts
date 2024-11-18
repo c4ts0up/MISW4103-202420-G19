@@ -35,16 +35,36 @@ test.describe('F3', async () => {
         const mockEmail = faker.internet.email();
 
         // GIVEN estoy loggeado como administrador
-
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "01-login"
+        ));
 
         // AND estoy en la página de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "02-pagina-miembros"
+        ));
 
         // AND hay un miembro creado
         await membersPage.createMember(
             mockName,
             mockEmail
         );
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "03-miembro-creado"
+        ));
         await membersPage.navigateTo();
 
         // before screenshot
@@ -53,7 +73,7 @@ test.describe('F3', async () => {
             config.sut.version,
             browserName,
             e7,
-            "before"
+            "04-before-then"
         ));
 
         // WHEN selecciono un miembro
@@ -66,17 +86,22 @@ test.describe('F3', async () => {
 
         // THEN redirige a la pagina principal
         await membersPage.checkRedirection(membersPage.getResource());
-        // vuelve a visitar la página principal para recargar
-        await membersPage.waitTime(5000);
-        await membersPage.navigateTo()
-
-        // after screenshot
         await myScreenshot(page, screenshotPath(
             config.evidence.baseDirectory,
             config.sut.version,
             browserName,
             e7,
-            "after"
+            "05-redireccion"
+        ));
+        // vuelve a visitar la página de miembros para recargar
+        await membersPage.waitTime(5000);
+        await membersPage.navigateTo()
+        await myScreenshot(page, screenshotPath(
+            config.evidence.baseDirectory,
+            config.sut.version,
+            browserName,
+            e7,
+            "06-miembros-recarga"
         ));
 
         // AND miembro no se puede hallar
