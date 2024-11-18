@@ -45,24 +45,23 @@ When('I enter {kraken-string} and {kraken-string} as publication date on {string
 When('I press the button to finish configurating the post on {string}', async function (scenario) {
     const postPage = new PostPage(this.driver);
     await postPage.buttonFinishConfiguringPost();
-    await takeScreenshot(this.driver, '07_finish_configuration', scenario);
 });
 
 When('I press the button to schedule the post on {string}', async function (scenario) {
     const postPage = new PostPage(this.driver);
     await postPage.publishPost();
-    await takeScreenshot(this.driver, '08_schedule_post', scenario);
+    await takeScreenshot(this.driver, '07_schedule_post', scenario);
 });
 
 Then('The post is correctly scheduled on {string}', async function (scenario) {
     await this.driver.url('http://localhost:2368/ghost/#/posts?type=scheduled');
-    await takeScreenshot(this.driver, '09_post_scheduled', scenario);
+    await takeScreenshot(this.driver, '08_post_scheduled', scenario);
 });
 
 Then('I should get a message error for invalid date on {string}', async function (scenario) {
     const postPage = new PostPage(this.driver);
     await postPage.checkValidationError();
-    await takeScreenshot(this.driver, '09_error_message_post_not_scheduled', scenario);
+    await takeScreenshot(this.driver, '08_error_message_post_not_scheduled', scenario);
 });
 
 // Create member
