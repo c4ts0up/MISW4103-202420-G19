@@ -101,7 +101,7 @@ Then('I should not see a red border indicating a validation error on {string}', 
     }
 });
 
-Then('The member is successfully created and listed in the members page on {string}', async function (scenario) {
+Then('The member is successfully created and listed in members page on {string}', async function (scenario) {
     await this.driver.url('http://localhost:2368/ghost/#/members');
     await takeScreenshot(this.driver, '06_member_created', scenario);
 });

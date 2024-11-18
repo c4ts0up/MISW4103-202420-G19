@@ -1,27 +1,32 @@
-Feature: Configurar lenguaje de publicación
+Feature: Crear una nueva publicación y programarla
 
-@user5 @web
-Scenario: E5 - Como usuario accedo a la plataforma Ghost, voy a la configuración y cambio el idioma por un codigo valido
-  Given I am correctly authenticated with "<USERNAME>" and "<PASSWORD>" on "E5"
+@user1 @web
+Scenario: E1 - Como usuario accedo a la plataforma Ghost, creo una publicación y la programo con una fecha valida
+  Given I am correctly authenticated with "<USERNAME>" and "<PASSWORD>" on "E1"
   And I wait for 2 seconds
-  And I navigate to the settings page on "E5"
-  And I wait for 2 seconds
-  And I navigate to the language settings page on "E5"
-  And I wait for 2 seconds
-  When I click the Edit button for language settings on "E5"
-  And I change the site language to "<LANGUAGE_VALID>" on "E5"
+  And I am creating a new post on "E1"
+  And I fill the title with "<TITLE_POST>" and the content with "<CONTENT_POST>" on "E1"
+  When I want to schedule the post on "E1"
   And I wait for 1 seconds
-  Then The language is updated successfully on "E5"
+  And I select the option to schedule for later on "E1"
+  And I enter "<POST_DATE>" and "<POST_TIME>" as publication date on "E1"
+  And I wait for 1 seconds
+  And I press the button to finish configurating the post on "E1"
+  And I press the button to schedule the post on "E1"
+  And I wait for 1 seconds
+  Then The post is correctly scheduled on "E1"
 
-@user6 @web
-Scenario: E6 - Como usuario accedo a la plataforma Ghost, voy a la configuración y cambio el idioma por un codigo invalido
-  Given I am correctly authenticated with "<USERNAME>" and "<PASSWORD>" on "E6"
+@user2 @web
+Scenario: E2 - Como usuario accedo a la plataforma Ghost, creo una publicación y la programo con una fecha invalida
+  Given I am correctly authenticated with "<USERNAME>" and "<PASSWORD>" on "E2"
   And I wait for 2 seconds
-  And I navigate to the settings page on "E6"
-  And I wait for 2 seconds
-  And I navigate to the language settings page on "E6"
-  And I wait for 2 seconds
-  When I click the Edit button for language settings on "E6"
-  And I change the site language to "<LANGUAGE_INVALID>" on "E6"
+  And I am creating a new post on "E2"
+  And I fill the title with "<TITLE_POST_INVALID>" and the content with "<CONTENT_POST_INVALID>" on "E2"
+  When I want to schedule the post on "E2"
   And I wait for 1 seconds
-  Then The update should fail due to invalid language on "E6"
+  And I select the option to schedule for later on "E2"
+  And I enter "<POST_DATE_INVALID>" and "<POST_TIME_INVALID>" as publication date on "E2"
+  And I wait for 1 seconds
+  And I press the button to finish configurating the post on "E2"
+  And I wait for 1 seconds
+  Then I should get a message error for invalid date on "E2"

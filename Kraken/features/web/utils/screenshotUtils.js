@@ -5,7 +5,7 @@ const path = require('path');
 async function takeScreenshot(driver, screenshotName, customPath) {
     
     // Ruta base fija del proyecto
-    const baseDir = path.resolve(__dirname, '../../../evidences/4.5.0/chromium');
+    const baseDir = path.resolve(__dirname, '../../../evidences/5.96.0/chromium');
     
     // Ruta completa incluyendo la entrada del usuario
     const finalDir = path.join(baseDir, customPath);
