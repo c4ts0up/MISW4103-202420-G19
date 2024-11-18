@@ -33,7 +33,7 @@ Para ejecutar las pruebas en kraken debe seguir los siguientes pasos:
 
 **! IMPORTANTE**: Debido a las limitaciones de Kraken, es necesario actualizar el archivo `ghost.feature` en la carpeta `features` para elegir los escenarios específicos. En la carpeta `features/tests` encontrará varios archivos `.feature` que corresponden a escenarios de prueba divididos por funcionalidad. Debe copiar el contenido del archivo que desee ejecutar en `ghost.feature`, ya que solo debe haber un archivo `.feature` a nivel de la carpeta features.
 
-Los resultados se almacenarán en una carpeta que se genera llamada `reports`.
+Los resultados se almacenarán en una carpeta que se genera llamada `reports`. Tambien se pueden visualizar los screenshots de manera secuencial para el VR en la carpeta `evidences`.
 
 ## Pruebas en Playwright
 Para ejecutar las pruebas en Playwright debe seguir los siguientes pasos:
