@@ -38,9 +38,17 @@ class PostPage {
 
     async fillPublicationDate(postDate, postTime) {
         const dateField = await this.driver.$(this.dateField);
+        
+        await dateField.click();
+        await dateField.keys(['Control', 'a']);
+        await dateField.keys('Backspace');
         await dateField.setValue(postDate);
 
         const timeField = await this.driver.$(this.timeField);
+
+        await timeField.click();
+        await timeField.keys(['Control', 'a']);
+        await timeField.keys('Backspace');
         await timeField.setValue(postTime);
     }
 
