@@ -3,8 +3,7 @@ class MemberPage {
         this.driver = driver;
         this.nameField = 'input#member-name';
         this.emailField = 'input#member-email';
-        this.saveButton = 'button[data-test-button="save"]';
-        this.validationError = 'input#member-email.error';
+        this.saveButton = 'button.gh-btn.gh-btn-primary.gh-btn-icon span';
     }
 
     async fillMemberDetails(name, email) {
@@ -18,11 +17,6 @@ class MemberPage {
     async saveMember() {
         const saveButton = await this.driver.$(this.saveButton);
         await saveButton.click();
-    }
-
-    async checkValidationError() {
-        const errorElement = await this.driver.$(this.validationError);
-        return await errorElement.isDisplayed();
     }
 }
 

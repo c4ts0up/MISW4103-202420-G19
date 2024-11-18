@@ -3,7 +3,7 @@
     "PASSWORD": "Ingrese acá su contraseña para conectarse a ghost",
     "TITLE_POST": "Publicación programada con fecha valida",
     "CONTENT_POST": "Contenido de la publicación programada con fecha valida",
-    "POST_DATE": "2024-11-10",
+    "POST_DATE": "2024-11-20",
     "POST_TIME": "12:00",
     "POST_DATE_INVALID": "2024-11-10",
     "POST_TIME_INVALID": "25:00",

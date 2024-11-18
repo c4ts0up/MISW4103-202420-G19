@@ -2,17 +2,13 @@ class PostPage {
     constructor(driver) {
         this.driver = driver;
 
-        // Elementos de la página
-        this.titleField = 'textarea[placeholder="Post title"]';
-        this.contentField = '.koenig-react-editor .koenig-lexical';
-        this.publishButton = 'button.gh-btn.gh-btn-editor.gh-publish-trigger';
-        this.clockButton = 'div[data-test-setting="publish-at"] button.gh-publish-setting-title';
-        this.scheduleButton = 'div.gh-radio:has(div[data-test-radio="schedule"]) label';
-        this.dateField = 'input[data-test-date-time-picker-date-input]';
-        this.timeField = 'input[data-test-date-time-picker-time-input]';
-        this.continueButton = 'button[data-test-button="continue"]';
-        this.finalPublishButton = '.gh-publish-cta .gh-btn-pulse';
-        this.errorMessage = '.gh-alert-content';
+        this.titleField = 'textarea[placeholder="Post Title"]';
+        this.contentField = '.koenig-editor__editor[data-placeholder="Begin writing your post..."]';
+        this.publishButton = 'div.gh-publishmenu .gh-btn.gh-btn-editor.gh-publishmenu-trigger';
+        this.scheduleButton = 'div.gh-publishmenu-radio-label=Schedule it for later';
+        this.dateField = 'div.gh-date-time-picker-date input[placeholder="YYYY-MM-DD"]';
+        this.timeField = 'div.gh-date-time-picker-time input[type="text"]';
+        this.finalPublishButton = 'button.gh-btn.gh-btn-black.gh-publishmenu-button span';
     }
 
     async fillPostTitleAndContent(title, content) {
@@ -30,8 +26,6 @@ class PostPage {
     }
 
     async clickButtonToSchedule() {
-        const clockButton = await this.driver.$(this.clockButton);
-        await clockButton.click();
         const scheduleButton = await this.driver.$(this.scheduleButton);
         await scheduleButton.click();
     }
@@ -52,16 +46,6 @@ class PostPage {
     async publishPost() {
         const publishButton = await this.driver.$(this.finalPublishButton);
         await publishButton.click({ force: true });
-    }
-
-    async checkValidationError() {
-        try {
-            const error = await this.driver.$(this.errorMessage);
-            console.log('Error message found, post not scheduled');
-            return await error.getText();
-        } catch (error) {
-            console.log('No error message found, post scheduled incorrectly');
-        }
     }
 }
 
