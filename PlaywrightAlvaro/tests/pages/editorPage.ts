@@ -21,22 +21,26 @@ class EditorPage extends BasePage {
     }
 
     async createPost(title: string, content: string) {
+        console.info(`Creating post with title = ${title}, content = ${content}`);
         await this.page.fill(this.postTitleInput, title);
         await this.page.click(this.editorSelector);
         await this.page.keyboard.type(content);
     }
 
     async publishPost() {
+        console.info(`Clicking on publishing post button: ${this.publishButton}`);
         await this.page.click(this.publishButton);
         await this.page.waitForTimeout(3000);
     }
 
     async changePostReleaseDate() {
+        console.info(`Clicking publish setting button: ${this.publishSettingButton}`);
         await this.page.click(this.publishSettingButton);
         await this.page.waitForTimeout(100);
     }
 
     async fillScheduleData(date: string, time: string) {
+        console.info(`Filling the schedule data with date = ${date}, time = ${time}`);
         await this.page.click(this.scheduleRadio);
         await this.page.waitForTimeout(100);
         await this.page.fill(this.dateInput, date);
@@ -44,27 +48,30 @@ class EditorPage extends BasePage {
     }
 
     async confirmSchedulePost() {
+        console.info(`Clicking continue button: ${this.continueButton}`);
         await this.page.click(this.continueButton);
         await this.page.waitForTimeout(100);
     }
 
     async publishScheduledPost() {
+        console.info(`Clicking confirming schedule button: ${this.confirmScheduleButton}`);
         await this.page.waitForSelector(this.confirmScheduleButton, { state: 'visible', timeout: 5000 });
         await this.page.click(this.confirmScheduleButton, { force: true });
         await this.page.waitForTimeout(3000);
     }
 
     async validateInvalidSchedulePost(date: string, time: string) {
+        console.info(`Validating invalid schedule post with date = ${date}, time = ${time}`);
         try {
             const errorMessage = this.page.locator(this.errorMessageSelector);
             if (errorMessage) {
                 const messageText = await errorMessage.innerText();
-                console.log('Error al programar la publicación con fecha/hora inválida:', messageText);
+                console.error('Error al programar la publicación con fecha/hora inválida:', messageText);
             } else {
-                console.log('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
+                console.error('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
             }
         } catch (error) {
-            console.log('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
+            console.error('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
         }
     }
 }
