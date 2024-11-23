@@ -12,7 +12,7 @@
 import {expect, test} from "@playwright/test";
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
-import {member_content_pe3} from "./data/blog";
+import {member_content_pe3, member_content_pe4} from "./data/blog";
 
 test.describe('F7', async () => {
 
@@ -70,6 +70,34 @@ test.describe('F7', async () => {
     const e4 = 'E004-create-invalid-member';
     test(e4, async ( { page, browserName } ) => {
 
+        const membersPage = new MembersPage(page, config.membersPage.resource)
+
         // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de creación de miembros
+        await membersPage.navigateTo();
+
+        // AND agrego datos válidos
+        // AND cambio el correo por un correo inválido
+        await membersPage.createMember(
+            member_content_pe4.name,
+            member_content_pe4.email_invalid
+        );
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+        // AND cambio el correo por un correo válido
+        await membersPage.inputEmail(member_content_pe4.email_valid);
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+
+        // THEN el borde rojo del campo de correo debería desaparecer
+        // (si hay borde rojo, este se hereda de la clase .error)
+        await membersPage.validateNoErrors();
+
+        // AND el nuevo miembro debería aparecer en la lista de miembros
+        await membersPage.navigateTo();
+        await membersPage.reload();
+        const createdMember = await membersPage.findMember(member_content_pe3.email);
+        expect(createdMember).not.toBeNull();
     });
 });

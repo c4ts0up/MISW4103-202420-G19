@@ -23,6 +23,10 @@ class MembersPage extends BasePage {
     private readonly memberActionsButton = "button[data-test-button='member-actions']";
     private readonly deleteMemberButton = "button[data-test-button='delete-member']";
 
+    // selectores CSS
+    private readonly errorSelector = ".error";
+
+
     constructor(page: Page, resource: string) {
         super(page, resource);
     }
@@ -129,6 +133,10 @@ class MembersPage extends BasePage {
 
     async checkRedirection(desiredResource: string) {
         await this.page.waitForURL(desiredResource)
+    }
+
+    async validateNoErrors() {
+        return expect(this.page.locator(this.errorSelector)).toHaveCount(0);
     }
 }
 
