@@ -13,6 +13,8 @@ import {expect, test} from "@playwright/test";
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {member_content_pe3, member_content_pe4} from "./data/blog";
+import {myScreenshot} from "./utils/evidence";
+import {screenshotPath} from "./utils/pathCreator";
 
 test.describe('F7', async () => {
 
@@ -35,6 +37,14 @@ test.describe('F7', async () => {
 
         // AND estoy en la página de creación de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e3,
+                "01-members-page"
+            )
+        );
 
         // AND agrego datos válidos
         // AND cambio el correo por un correo válido
@@ -42,14 +52,38 @@ test.describe('F7', async () => {
             member_content_pe3.name,
             member_content_pe3.email
         );
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e3,
+                "02-create-member"
+            )
+        );
         // AND guardo el nuevo miembro
         await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e3,
+                "03-member-saved"
+            )
+        );
 
         // THEN el nuevo miembro debería aparecer en la lista de miembros
         await membersPage.navigateTo();
         await membersPage.reload();
         const createdMember = await membersPage.findMember(member_content_pe3.email);
         expect(createdMember).not.toBeNull();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e3,
+                "04-members-page"
+            )
+        );
     });
 
 
@@ -76,6 +110,14 @@ test.describe('F7', async () => {
 
         // AND estoy en la página de creación de miembros
         await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "01-members-page"
+            )
+        );
 
         // AND agrego datos válidos
         // AND cambio el correo por un correo inválido
@@ -83,21 +125,73 @@ test.describe('F7', async () => {
             member_content_pe4.name,
             member_content_pe4.email_invalid
         );
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "02-create-member"
+            )
+        );
         // AND guardo el nuevo miembro
         await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "03-member-saved"
+            )
+        );
+
         // AND cambio el correo por un correo válido
         await membersPage.inputEmail(member_content_pe4.email_valid);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "04-changed-to-valid-email"
+            )
+        );
+
         // AND guardo el nuevo miembro
         await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "05-member-saved"
+            )
+        );
 
         // THEN el borde rojo del campo de correo debería desaparecer
         // (si hay borde rojo, este se hereda de la clase .error)
         await membersPage.validateNoErrors();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "06-validate-no-errors"
+            )
+        );
 
         // AND el nuevo miembro debería aparecer en la lista de miembros
         await membersPage.navigateTo();
         await membersPage.reload();
+
         const createdMember = await membersPage.findMember(member_content_pe3.email);
         expect(createdMember).not.toBeNull();
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e4,
+                "07-members-page"
+            )
+        );
     });
 });
