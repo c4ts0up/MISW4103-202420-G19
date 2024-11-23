@@ -58,6 +58,7 @@ test.describe('F3', async () => {
             mockName,
             mockEmail
         );
+        await membersPage.saveMemberChanges();
         await myScreenshot(page, screenshotPath(
             config.evidence.baseDirectory,
             config.sut.version,

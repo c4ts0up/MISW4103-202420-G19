@@ -93,9 +93,6 @@ class MembersPage extends BasePage {
         // espera a que sean visibles los botones
         await this.inputName(memberName);
         await this.inputEmail(memberEmail);
-
-        // guardar
-        return await this.saveMemberChanges();
     }
 
 

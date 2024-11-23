@@ -9,7 +9,10 @@
  *
  */
 
-import {test} from "@playwright/test";
+import {expect, test} from "@playwright/test";
+import MembersPage from "./pages/membersPage";
+import {config} from "./config/config";
+import {member_content_pe3} from "./data/blog";
 
 test.describe('F7', async () => {
 
@@ -26,8 +29,27 @@ test.describe('F7', async () => {
      */
     const e3 = 'E003-create-valid-member';
     test(e3, async ( { page, browserName } ) => {
+        const membersPage = new MembersPage(page, config.membersPage.resource)
 
         // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de creación de miembros
+        await membersPage.navigateTo();
+
+        // AND agrego datos válidos
+        // AND cambio el correo por un correo válido
+        await membersPage.createMember(
+            member_content_pe3.name,
+            member_content_pe3.email
+        );
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+
+        // THEN el nuevo miembro debería aparecer en la lista de miembros
+        await membersPage.navigateTo();
+        await membersPage.reload();
+        const createdMember = await membersPage.findMember(member_content_pe3.email);
+        expect(createdMember).not.toBeNull();
     });
 
 

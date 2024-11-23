@@ -62,6 +62,7 @@ test.describe('F5', async () => {
             mockName,
             mockEmail
         );
+        await membersPage.saveMemberChanges();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -167,6 +168,7 @@ test.describe('F5', async () => {
             mockName,
             mockEmail
         );
+        await membersPage.saveMemberChanges();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -273,10 +275,11 @@ test.describe('F5', async () => {
         );
 
         // AND hay un miembro X creado
-        const saveButtonResponseMemberX = await membersPage.createMember(
+        await membersPage.createMember(
             xMockName,
             xMockEmail
         );
+        const saveButtonResponseMemberX = await membersPage.saveMemberChanges();
         expect(saveButtonResponseMemberX.trim()).toEqual('Saved');
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
@@ -289,10 +292,11 @@ test.describe('F5', async () => {
         await membersPage.navigateTo();
 
         // AND hay un miembro Y creado
-        const saveButtonResponseMemberY = await membersPage.createMember(
+        await membersPage.createMember(
             yMockName,
             yMockEmail
         );
+        const saveButtonResponseMemberY = await membersPage.saveMemberChanges();
         expect(saveButtonResponseMemberY.trim()).toEqual('Saved');
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
