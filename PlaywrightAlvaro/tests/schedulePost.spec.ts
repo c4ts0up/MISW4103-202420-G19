@@ -10,6 +10,10 @@
  */
 
 import {expect, test} from "@playwright/test";
+import {config} from "./config/config";
+import EditorPage from "./pages/editorPage";
+import ScheduledPage from "./pages/scheduledPage";
+import {blog, post_content_pe1, post_content_pe2} from "./data/blog";
 
 test.describe('F6', async () => {
 
@@ -26,7 +30,34 @@ test.describe('F6', async () => {
      */
     const e1 = 'E001-programar-valido-publicacion'
     test(e1, async ( { page, browserName } ) => {
+        const editorPage = new EditorPage(page, config.editorPage.resource);
+        const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
+        // GIVEN estoy loggeado como administrador
+
+        // AND la publicación tiene título y cuerpo
+        await editorPage.navigateTo();
+        await editorPage.createPost(
+            post_content_pe1.title,
+            post_content_pe1.content
+        );
+
+        // WHEN programo la publicacion
+        await editorPage.publishPost();
+        await editorPage.changePostReleaseDate();
+        // AND ingreso una fecha válida de publicación
+        await editorPage.fillScheduleData(
+            post_content_pe1.date,
+            post_content_pe1.time
+        );
+
+        // AND confirmo la programación de la publicación
+        await editorPage.confirmSchedulePost();
+
+        // THEN la publicación se debería programar correctamente
+        await editorPage.publishScheduledPost()
+        // AND la publicación debería aparecer en la lista de publicaciones programadas
+        await scheduledPage.reviewScheduledPosts()
     });
 
     /**
@@ -41,6 +72,33 @@ test.describe('F6', async () => {
      */
     const e2 = 'E002-programar-invalido-publicacion'
     test(e2, async ( {page, browserName }) => {
+        const editorPage = new EditorPage(page, config.editorPage.resource);
+        const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
+        // GIVEN estoy loggeado como administrador
+
+        // AND la publicación tiene título y cuerpo
+        await editorPage.navigateTo();
+        await editorPage.createPost(
+            post_content_pe2.title,
+            post_content_pe2.content
+        );
+
+        // WHEN programo la publicacion
+        await editorPage.publishPost();
+        await editorPage.changePostReleaseDate();
+        // AND ingreso una fecha inválida de publicación
+        await editorPage.fillScheduleData(
+            post_content_pe2.date,
+            post_content_pe2.time
+        );
+        // AND confirmo la programación de la publicación
+        await editorPage.confirmSchedulePost();
+
+        // THEN debería recibir un mensaje de error por fecha inválida
+        await editorPage.validateInvalidSchedulePost(
+            post_content_pe2.date,
+            post_content_pe2.time
+        )
     });
 });

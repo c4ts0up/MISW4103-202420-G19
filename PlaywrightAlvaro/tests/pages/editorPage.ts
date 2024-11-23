@@ -14,6 +14,7 @@ class EditorPage extends BasePage {
     private readonly timeInput = 'input[data-test-date-time-picker-time-input]';
     private readonly continueButton = 'button[data-test-button="continue"]';
     private readonly confirmScheduleButton = '.gh-publish-cta .gh-btn-pulse';
+    private readonly errorMessageSelector = 'p[class*="gh-box"]';
 
     constructor(page: Page, resource: string) {
         super(page, resource);
@@ -53,20 +54,17 @@ class EditorPage extends BasePage {
         await this.page.waitForTimeout(3000);
     }
 
-    async publishInvalidScheduledPost(date, time, screenshotPath) {
+    async validateInvalidSchedulePost(date: string, time: string) {
         try {
-            const errorMessage = await this.page.$(this.errorMessageSelector);
+            const errorMessage = this.page.locator(this.errorMessageSelector);
             if (errorMessage) {
                 const messageText = await errorMessage.innerText();
                 console.log('Error al programar la publicación con fecha/hora inválida:', messageText);
-                await this.page.screenshot({ path: `${screenshotPath}/10_error_invalid_schedule.png` });
             } else {
                 console.log('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
-                await this.page.screenshot({ path: `${screenshotPath}/10_did_not_receive_error_invalid_schedule.png` });
             }
         } catch (error) {
             console.log('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
-            await this.page.screenshot({ path: `${screenshotPath}/10_did_not_receive_error_invalid_schedule.png` });
         }
     }
 }

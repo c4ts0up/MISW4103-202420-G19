@@ -30,7 +30,7 @@ test.describe('F5', async () => {
      */
     const e8 = 'E008-correo-valido';
     test(e8, async ( { page, browserName } ) => {
-        let membersPage = new MembersPage(page, config.membersPage.resource);
+        const membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
@@ -135,7 +135,7 @@ test.describe('F5', async () => {
      */
     const e9 = "E009-correo-invalido"
     test(e9, async ( { page, browserName } ) => {
-        let membersPage = new MembersPage(page, config.membersPage.resource);
+        const membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
         const mockEmail = faker.internet.email();
