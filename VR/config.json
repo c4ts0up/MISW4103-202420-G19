@@ -24,12 +24,12 @@
     "diffColor": [255, 0, 255]
   },
   "sut":{
-    "baseVersion": 5.95,
+    "baseVersion": 4.5,
     "rcVersion": 5.96,
-    "testName": "E010-correo-repetido",
+    "testName": "E007-delete-member",
     "evidence":{
       "baseDirectory": "evidence",
-      "targetDirectory": "results_vr"
+      "targetDirectory": "demo"
     }
   }
 }
