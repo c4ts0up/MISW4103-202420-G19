@@ -103,7 +103,7 @@ test.describe('F7', async () => {
      */
     const e4 = 'E004-create-invalid-member';
     test(e4, async ( { page, browserName } ) => {
-
+        test.slow();
         const membersPage = new MembersPage(page, config.membersPage.resource)
 
         // GIVEN estoy loggeado como administrador

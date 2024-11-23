@@ -44,8 +44,8 @@ class EditorPage extends BasePage {
         logger.info(`Filling the schedule data with date = ${date}, time = ${time}`);
         await this.page.click(this.scheduleRadio);
         await this.page.waitForTimeout(100);
-        await this.page.fill(this.dateInput, date);
-        await this.page.fill(this.timeInput, time);
+        await this.page.locator(this.dateInput).fill(date);
+        await this.page.locator(this.timeInput).fill(time);
     }
 
     async confirmSchedulePost() {

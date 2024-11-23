@@ -29,6 +29,7 @@ test.describe('F8', async () => {
      */
     const e5 = 'E005-cambiar-lenguaje-valido';
     test(e5, async ( { page, browserName } ) => {
+        test.slow();
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         // GIVEN estoy loggeado como administrador

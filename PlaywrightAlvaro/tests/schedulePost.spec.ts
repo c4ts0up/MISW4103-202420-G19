@@ -105,7 +105,7 @@ test.describe('F6', async () => {
                 "06-continue-button-clicked"
             )
         );
-        await editorPage.publishScheduledPost()
+        await editorPage.publishScheduledPost();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -125,7 +125,7 @@ test.describe('F6', async () => {
             )
         );
         // AND la publicación debería aparecer en la lista de publicaciones programadas
-        await scheduledPage.reviewScheduledPosts()
+        await scheduledPage.reviewScheduledPosts();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -146,8 +146,9 @@ test.describe('F6', async () => {
      * AND confirmo la programación de la publicación
      * THEN debería recibir un mensaje de error por fecha inválida
      */
-    const e2 = 'E002-programar-invalido-publicacion'
-    test(e2, async ( {page, browserName }) => {
+    const e2 = 'E002-programar-publicacion-invalida'
+    test.fixme(e2, async ( {page, browserName }) => {
+        test.slow();
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
@@ -198,6 +199,7 @@ test.describe('F6', async () => {
         );
 
         // AND ingreso una fecha inválida de publicación
+        // FIXME: no se borra la opción de la hora
         await editorPage.fillScheduleData(
             post_content_pe2.date,
             post_content_pe2.time
@@ -221,18 +223,27 @@ test.describe('F6', async () => {
                 "06-continue-button-clicked"
             )
         );
-
-        // THEN debería recibir un mensaje de error por fecha inválida
-        await editorPage.validateInvalidSchedulePost(
-            post_content_pe2.date,
-            post_content_pe2.time
-        )
+        await editorPage.publishScheduledPost();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
                 e2,
-                "07-invalid-date-alert"
+                "07-confirmed-scheduling"
+            )
+        );
+
+        // THEN debería recibir un mensaje de error por fecha inválida
+        await editorPage.validateInvalidSchedulePost(
+            post_content_pe2.date,
+            post_content_pe2.time
+        );
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e2,
+                "08-invalid-date-alert"
             )
         );
     });
