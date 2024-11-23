@@ -1,5 +1,6 @@
 import {BasePage} from "./basePage";
 import {Page} from "playwright";
+import logger from "../utils/logger";
 
 /**
  * Representa la página de los posts programados
@@ -12,6 +13,7 @@ class ScheduledPage extends BasePage {
     }
 
     async reviewScheduledPosts() {
+        logger.info("Reviewing scheduled posts");
         await this.page.click(this.dismissButton, { force: true });
         await this.page.waitForTimeout(1000);
         await this.navigateTo();

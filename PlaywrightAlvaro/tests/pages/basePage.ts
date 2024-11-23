@@ -1,4 +1,5 @@
 import {Page} from "@playwright/test";
+import logger from "../utils/logger";
 
 export class BasePage {
     protected page: Page;
@@ -14,6 +15,7 @@ export class BasePage {
     }
 
     async reload() {
+        logger.info(`Reloading page in ${this.resource}`);
         await this.page.reload(
             {
                 waitUntil: 'domcontentloaded'
@@ -22,6 +24,7 @@ export class BasePage {
     }
 
     async navigateTo() {
+        logger.info(`Navigating to ${this.resource}`);
         await this.page.goto(
             this.resource,
             {
@@ -31,6 +34,7 @@ export class BasePage {
     }
 
     async waitTime(time_ms: number) {
+        logger.info(`Waiting ${time_ms} ms for timeout`);
         await this.page.waitForTimeout(time_ms);
     }
 }

@@ -5,13 +5,14 @@
  */
 
 import {Page} from "playwright";
+import logger from "./logger";
 
 
 export async function myScreenshot(
     page: Page,
     screenshotPath: string
 ) {
-    console.log(`Screenshot --> ${screenshotPath}`);
+    logger.info(`Saving screenshot at ${screenshotPath}`);
 
     // fuerza la espera para cargar toda la página
     await page.waitForLoadState("load");
