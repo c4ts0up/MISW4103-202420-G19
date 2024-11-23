@@ -9,6 +9,9 @@
  */
 
 import {test} from "@playwright/test";
+import SettingsPage, {SubSettingsSelectors} from "./pages/settingsPage";
+import {config} from "./config/config";
+import {language_content_pe6} from "./data/blog";
 
 test.describe('F8', async () => {
 
@@ -24,8 +27,22 @@ test.describe('F8', async () => {
      */
     const e5 = 'E005-cambiar-lenguaje-valido';
     test(e5, async ( { page, browserName } ) => {
+        const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de configuración
+        await settingsPage.navigateTo();
+        // AND selecciono la opción de idioma
+        await settingsPage.navigateToSubSetting(SubSettingsSelectors.LANGUAGE);
+
+        // WHEN edito el idioma de publicación
+        await settingsPage.clickEditButton();
+        // AND escribo el código del idioma válido
+        await settingsPage.changeLanguage(language_content_pe6.language);
+
+        // THEN el idioma debería guardarse correctamente
+        await settingsPage.confirmLanguageUpdate();
     });
 
     /**
@@ -33,14 +50,28 @@ test.describe('F8', async () => {
      *
      * GIVEN estoy loggeado como administrador
      * AND estoy en la página de configuración
-     * AND selecciono loa opción de idioma
+     * AND selecciono la opción de idioma
      * WHEN edito el idioma de publicación
      * AND escribo el código del idioma inválido
      * THEN el idioma no debería guardarse
      */
     const e6 = 'E006-cambiar-lenguaje-invalido';
     test(e6, async ( { page, browserName } ) => {
+        const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de configuración
+        await settingsPage.navigateTo();
+        // AND selecciono la opción de idioma
+        await settingsPage.navigateToSubSetting(SubSettingsSelectors.LANGUAGE);
+
+        // WHEN edito el idioma de publicación
+        await settingsPage.clickEditButton();
+        // AND escribo el código del idioma inválido
+        await settingsPage.changeLanguage(language_content_pe6.language);
+
+        // THEN el idioma no debería guardarse
+        await settingsPage.failUpdateLanguage();
     });
 });
