@@ -25,36 +25,32 @@ class EditorPage extends BasePage {
         await this.page.keyboard.type(content);
     }
 
-    async beginSchedulePost(screenshotPath) {
+    async publishPost() {
         await this.page.click(this.publishButton);
         await this.page.waitForTimeout(3000);
-        await this.page.screenshot({ path: `${screenshotPath}/05_new-post-created.png` });
-
-        await this.page.click(this.publishSettingButton);
-        await this.page.waitForTimeout(100);
-        await this.page.screenshot({ path: `${screenshotPath}/06_publish-setting-button-clicked.png` });
     }
 
-    async fillScheduleData(date, time, screenshotPath) {
+    async changePostReleaseDate() {
+        await this.page.click(this.publishSettingButton);
+        await this.page.waitForTimeout(100);
+    }
+
+    async fillScheduleData(date: string, time: string) {
         await this.page.click(this.scheduleRadio);
-        await this.page.screenshot({ path: `${screenshotPath}/07_schedule-radio-selected.png` });
         await this.page.waitForTimeout(100);
         await this.page.fill(this.dateInput, date);
         await this.page.fill(this.timeInput, time);
-        await this.page.screenshot({ path: `${screenshotPath}/08_date-time-filled.png` });
     }
 
-    async confirmSchedulePost(screenshotPath) {
+    async confirmSchedulePost() {
         await this.page.click(this.continueButton);
-        await this.page.screenshot({ path: `${screenshotPath}/09_continue-button-clicked.png` });
         await this.page.waitForTimeout(100);
     }
 
-    async publishScheduledPost(screenshotPath) {
+    async publishScheduledPost() {
         await this.page.waitForSelector(this.confirmScheduleButton, { state: 'visible', timeout: 5000 });
         await this.page.click(this.confirmScheduleButton, { force: true });
         await this.page.waitForTimeout(3000);
-        await this.page.screenshot({ path: `${screenshotPath}/10_post-scheduled.png` });
     }
 
     async publishInvalidScheduledPost(date, time, screenshotPath) {
@@ -74,3 +70,5 @@ class EditorPage extends BasePage {
         }
     }
 }
+
+export default EditorPage;
