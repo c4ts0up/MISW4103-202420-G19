@@ -55,11 +55,11 @@ export class SettingsRandomProvider implements SettingsProvider {
 export class SettingsRelatedProvider implements SettingsProvider {
 
     getValidLanguage(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 }
 
@@ -70,10 +70,10 @@ export class SettingsRelatedProvider implements SettingsProvider {
 export class SettingsAPrioriProvider implements SettingsProvider {
 
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getValidLanguage(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 }

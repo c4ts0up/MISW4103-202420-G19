@@ -73,19 +73,19 @@ export class MemberRandomProvider implements MemberProvider {
 export class MemberRelatedProvider implements MemberProvider {
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getValidEmail(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getValidName(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 }
 
@@ -96,18 +96,18 @@ export class MemberRelatedProvider implements MemberProvider {
 export class MemberAPrioriProvider implements MemberProvider {
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getValidEmail(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 
     getValidName(): string {
-        return "";
+        throw new Error("Method not implemented.");
     }
 }

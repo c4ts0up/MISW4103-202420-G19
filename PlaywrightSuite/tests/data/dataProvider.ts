@@ -3,6 +3,7 @@
  */
 import {DataGenerationStrategy} from "../config/config";
 import {MemberAPrioriProvider, MemberProvider, MemberRandomProvider, MemberRelatedProvider} from "./memberProvider";
+import {PostAPrioriProvider, PostProvider, PostRandomProvider, PostRelatedProvider} from "./postProvider";
 import {
     SettingsAPrioriProvider,
     SettingsProvider,
@@ -13,7 +14,7 @@ import logger from "../utils/logger";
 
 export class DataProvider {
     public readonly memberProvider: MemberProvider;
-    // TODO: add post provider
+    public readonly postProvider: PostProvider;
     public readonly settingsProvider: SettingsProvider;
 
     /**
@@ -42,13 +43,13 @@ export class DataProvider {
         // PostProvider
         logger.info(`Estrategia de provisión de datos de "settings": ${postStrategy.toString()}`);
         if (postStrategy == DataGenerationStrategy.RANDOM) {
-            // TODO
+            this.postProvider = new PostRandomProvider();
         }
         else if (postStrategy == DataGenerationStrategy.PSEUDO_RANDOM) {
-            // TODO
+            this.postProvider = new PostRelatedProvider();
         }
         else {
-            // TODO
+            this.postProvider = new PostAPrioriProvider();
         }
 
         // SettingsProvider
