@@ -5,12 +5,14 @@
  */
 
 
+import * as path from "node:path";
+
 /**
  * Función base para crear directorios
  * @param directories lista de directorios
  */
 function concatanatePaths(directories: string[]) {
-    return "./" + directories.join('/')
+    return path.join('.', ...directories);
 }
 
 /**
