@@ -49,25 +49,7 @@ export interface MemberProvider {
 export class MemberRandomProvider implements MemberProvider {
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        if (option == EMAIL_GENERATION_OPTIONS.LONG) {
-            // aaa...a@b.xyz
-            return `${faker.string.alphanumeric(186)}@${faker.string.alpha(1)}.${faker.string.alpha(3)}`;
-        }
-        else if (option == EMAIL_GENERATION_OPTIONS.SHORT) {
-            return "";
-        }
-        else if (option == EMAIL_GENERATION_OPTIONS.NO_AT) {
-            // abcdefgh.xyz
-            return `${faker.string.alphanumeric()}.${faker.string.alpha(3)}`
-        }
-        else if (option == EMAIL_GENERATION_OPTIONS.NO_DOMAIN) {
-            // abcdefgh@mail
-            return `${faker.string.alphanumeric()}@${faker.string.alpha()}`
-        }
-        else {
-            // ñññ...ñ@mail.xyz
-            return `${faker.string.sample()}@${faker.string.alpha()}.${faker.string.sample(3)}`
-        }
+        return faker.helpers.fromRegExp(EMAIL_GENERATION_OPTIONS[option]);
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
