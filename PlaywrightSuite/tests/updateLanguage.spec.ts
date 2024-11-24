@@ -104,7 +104,8 @@ test.describe('F8', async () => {
      * THEN el idioma no debería guardarse
      */
     const e6 = 'E006-cambiar-lenguaje-invalido';
-    test.fixme(e6, async ( { page, browserName, dataProvider } ) => {
+    // FIXME: fallo en Ghost. Sí guarda idiomas inválidos bajo el código ISO 639
+    test(e6, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         const language = dataProvider.settingsProvider.getInvalidLanguage(LANGUAGE_GENERATION_OPTIONS.LONG);
@@ -156,7 +157,6 @@ test.describe('F8', async () => {
         );
 
         // THEN el idioma no debería guardarse
-        await settingsPage.failUpdateLanguage();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -165,5 +165,6 @@ test.describe('F8', async () => {
                 "05-language-not-updated"
             )
         );
+        await settingsPage.failUpdateLanguage();
     });
 });
