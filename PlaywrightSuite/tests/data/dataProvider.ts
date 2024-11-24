@@ -11,28 +11,56 @@ import {
 } from "./settingsProvider";
 import logger from "../utils/logger";
 
-class DataProvider {
-    private readonly memberProvider: MemberProvider;
+export class DataProvider {
+    public readonly memberProvider: MemberProvider;
     // TODO: add post provider
-    private readonly settingsProvider: SettingsProvider;
+    public readonly settingsProvider: SettingsProvider;
 
     /**
      * Construye con base en la estrategia elegida
-     * @param strategy
+     * @param memberStrategy estrategia de generación de datos para los miembros
+     * @param postStrategy estrategia de generación de datos para los posts
+     * @param settingsStrategy estrategia de generación de datos para las configuraciones de admin
      */
-    constructor(strategy: DataGenerationStrategy) {
-        logger.info(`Estrategia de provisión de datos: ${strategy.toString()}`);
-        if (strategy == DataGenerationStrategy.RANDOM) {
+    constructor(
+        memberStrategy: DataGenerationStrategy,
+        postStrategy: DataGenerationStrategy,
+        settingsStrategy: DataGenerationStrategy
+    ) {
+        // MemberProvider
+        logger.info(`Estrategia de provisión de datos de "member": ${memberStrategy.toString()}`);
+        if (memberStrategy == DataGenerationStrategy.RANDOM) {
             this.memberProvider = new MemberRandomProvider();
+        }
+        else if (memberStrategy == DataGenerationStrategy.PSEUDO_RANDOM) {
+            this.memberProvider = new MemberRelatedProvider();
+        }
+        else {
+            this.memberProvider = new MemberAPrioriProvider();
+        }
+
+        // PostProvider
+        logger.info(`Estrategia de provisión de datos de "settings": ${postStrategy.toString()}`);
+        if (postStrategy == DataGenerationStrategy.RANDOM) {
+            // TODO
+        }
+        else if (postStrategy == DataGenerationStrategy.PSEUDO_RANDOM) {
+            // TODO
+        }
+        else {
+            // TODO
+        }
+
+        // SettingsProvider
+        logger.info(`Estrategia de provisión de datos de "settings": ${settingsStrategy.toString()}`);
+        if (settingsStrategy == DataGenerationStrategy.RANDOM) {
             this.settingsProvider = new SettingsRandomProvider();
         }
-        else if (strategy == DataGenerationStrategy.PSEUDO_RANDOM) {
-            this.memberProvider = new MemberRelatedProvider();
+        else if (settingsStrategy == DataGenerationStrategy.PSEUDO_RANDOM) {
             this.settingsProvider = new SettingsRelatedProvider();
         }
         else {
-            this.memberProvider = new MemberAPrioriProvider()
-            this.settingsProvider = new SettingsAPrioriProvider()
+            this.settingsProvider = new SettingsAPrioriProvider();
         }
     }
 }

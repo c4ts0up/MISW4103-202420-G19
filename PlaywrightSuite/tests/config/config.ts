@@ -13,9 +13,9 @@ export const config = {
     },
 
     data: {
-        member: DataGenerationStrategy.RANDOM,
-        post: DataGenerationStrategy.RANDOM,
-        settings: DataGenerationStrategy.RANDOM,
+        memberStrategy: DataGenerationStrategy.RANDOM,
+        postStrategy: DataGenerationStrategy.RANDOM,
+        settingsStrategy: DataGenerationStrategy.RANDOM,
     },
 
     editorPage: {
