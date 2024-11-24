@@ -14,6 +14,7 @@ import {faker} from "@faker-js/faker";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 import {test} from "./fixtures/dataGenerator";
+import logger from "./utils/logger";
 
 test.describe('F3', async () => {
 
@@ -32,8 +33,11 @@ test.describe('F3', async () => {
     test(e7, async( { page, browserName, dataProvider } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
-        const mockName = faker.person.fullName();
-        const mockEmail = faker.internet.email();
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
 
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(
