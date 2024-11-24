@@ -28,7 +28,7 @@ test.describe('F8', async () => {
      * THEN el idioma debería guardarse correctamente
      */
     const e5 = 'E005-cambiar-lenguaje-valido';
-    test(e5, async ( { page, browserName, memberProvider } ) => {
+    test(e5, async ( { page, browserName, dataProvider } ) => {
         test.slow();
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
@@ -99,7 +99,7 @@ test.describe('F8', async () => {
      * THEN el idioma no debería guardarse
      */
     const e6 = 'E006-cambiar-lenguaje-invalido';
-    test(e6, async ( { page, browserName, memberProvider } ) => {
+    test(e6, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         // GIVEN estoy loggeado como administrador

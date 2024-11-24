@@ -29,7 +29,7 @@ test.describe('F3', async () => {
      * AND miembro no se puede hallar
      */
     const e7 = 'E007-delete-member';
-    test(e7, async( { page, browserName, memberProvider } ) => {
+    test(e7, async( { page, browserName, dataProvider } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();

@@ -31,7 +31,7 @@ test.describe('F6', async () => {
      * AND la publicación debería aparecer en la lista de publicaciones programadas
      */
     const e1 = 'E001-programar-valido-publicacion'
-    test(e1, async ( { page, browserName, memberProvider } ) => {
+    test(e1, async ( { page, browserName, dataProvider } ) => {
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
@@ -147,7 +147,7 @@ test.describe('F6', async () => {
      * THEN debería recibir un mensaje de error por fecha inválida
      */
     const e2 = 'E002-programar-publicacion-invalida'
-    test.fixme(e2, async ( {page, browserName, memberProvider }) => {
+    test.fixme(e2, async ( {page, browserName, dataProvider }) => {
         test.slow();
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);

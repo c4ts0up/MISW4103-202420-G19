@@ -4,7 +4,7 @@ import {config} from "../config/config";
 
 // Extend base test with MemberProvider
 type DataGenerationFixture = {
-    memberProvider: DataProvider;
+    dataProvider: DataProvider;
 };
 
 /**
@@ -12,7 +12,7 @@ type DataGenerationFixture = {
  *
  */
 export const test = baseTest.extend<DataGenerationFixture>({
-    memberProvider: async ({}, use) => {
+    dataProvider: async ({}, use) => {
         const provider = new DataProvider(
             config.data.memberStrategy,
             config.data.postStrategy,

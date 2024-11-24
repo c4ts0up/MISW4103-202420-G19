@@ -1,15 +1,16 @@
 import {faker} from "@faker-js/faker";
+import RandExp = require("randexp");
 
 export enum NAME_GENERATION_OPTIONS {
-    LONG = `/^[a-zA-Z]{91} [a-zA-Z]{100}$/`,
-    SHORT = `/^$/`
+    LONG = `^[A-Z][a-z]{91} [A-Z][a-z]{100}$`,
+    SHORT = `^$`
 }
 
 export enum EMAIL_GENERATION_OPTIONS {
-    LONG = `/^[a-zA-Z0-9]{186}@[a-zA-Z]\.[a-zA-Z]{3}$/`,
-    SHORT = `/^$/`,
-    NO_AT = `/^[a-zA-Z0-9]{3,50}(\\.[a-zA-Z]{2,3})+$/`,
-    NO_DOMAIN = `/^[a-zA-Z0-9]{3,50}@[a-zA-Z]{3,10}$/`,
+    LONG = `^[a-zA-Z0-9]{186}@[a-zA-Z]\\.[a-zA-Z]{3}$`,
+    SHORT = `^$`,
+    NO_AT = `^[a-zA-Z0-9]{3,50}(\\.[a-zA-Z]{2,3}){1,5}$`,
+    NO_DOMAIN = `^[a-zA-Z0-9]{3,50}@[a-zA-Z]{3,10}$`,
     SPECIAL_CHARACTERS = `^[\x00-\x7F]{3,20}@[a-zA-Z]{3,20}\\.[a-zA-Z]{2,3}$`
 }
 
@@ -49,11 +50,11 @@ export interface MemberProvider {
 export class MemberRandomProvider implements MemberProvider {
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        return faker.helpers.fromRegExp(EMAIL_GENERATION_OPTIONS[option]);
+        return new RandExp(option).gen();
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
-        return faker.helpers.fromRegExp(NAME_GENERATION_OPTIONS[option]);
+        return new RandExp(option).gen();
     }
 
     getValidEmail(): string {

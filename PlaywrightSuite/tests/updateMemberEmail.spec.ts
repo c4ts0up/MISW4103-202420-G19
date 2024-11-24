@@ -10,10 +10,11 @@
 import {expect} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
-import {faker} from '@faker-js/faker';
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 import {test} from "./fixtures/dataGenerator";
+import logger from "./utils/logger";
+import {EMAIL_GENERATION_OPTIONS, NAME_GENERATION_OPTIONS} from "./data/memberProvider";
 
 test.describe('F5', async () => {
 
@@ -30,12 +31,16 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Saved"
      */
     const e8 = 'E008-correo-valido';
-    test(e8, async ( { page, browserName, memberProvider } ) => {
+    test(e8, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
-        const mockName = faker.person.fullName();
-        const mockEmail = faker.internet.email();
-        const mockValidEmail = faker.internet.email();
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+        const mockValidEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+        logger.info(`mockValidEmail = ${mockValidEmail}`);
 
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(
@@ -136,12 +141,16 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e9 = "E009-correo-invalido"
-    test(e9, async ( { page, browserName, memberProvider } ) => {
+    test(e9, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
-        const mockName = faker.person.fullName();
-        const mockEmail = faker.internet.email();
-        const mockInvalidEmail = faker.word.noun();
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_AT);
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
 
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(
@@ -246,13 +255,19 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e10 = "E010-correo-repetido";
-    test(e10, async ( { page, browserName, memberProvider } ) => {
+    test(e10, async ( { page, browserName, dataProvider } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
-        const xMockName = faker.person.fullName();
-        const xMockEmail = faker.internet.email();
-        const yMockName = faker.person.fullName();
-        const yMockEmail = faker.internet.email();
+        const xMockName = dataProvider.memberProvider.getValidName();
+        const xMockEmail = dataProvider.memberProvider.getValidEmail();
+        const yMockName = dataProvider.memberProvider.getValidName();
+        const yMockEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`xMockName = ${xMockName}`);
+        logger.info(`xMockEmail = ${xMockEmail}`);
+        logger.info(`yMockName = ${yMockName}`);
+        logger.info(`yMockEmail = ${yMockEmail}`);
+
 
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(

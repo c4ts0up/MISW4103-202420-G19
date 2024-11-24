@@ -31,7 +31,7 @@ test.describe('F7', async () => {
      * THEN el nuevo miembro debería aparecer en la lista de miembros
      */
     const e3 = 'E003-create-valid-member';
-    test(e3, async ( { page, browserName, memberProvider } ) => {
+    test(e3, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource)
 
         // GIVEN estoy loggeado como administrador
@@ -103,7 +103,7 @@ test.describe('F7', async () => {
      * AND el nuevo miembro debería aparecer en la lista de miembros
      */
     const e4 = 'E004-create-invalid-member';
-    test(e4, async ( { page, browserName, memberProvider } ) => {
+    test(e4, async ( { page, browserName, dataProvider } ) => {
         test.slow();
         const membersPage = new MembersPage(page, config.membersPage.resource)
 
