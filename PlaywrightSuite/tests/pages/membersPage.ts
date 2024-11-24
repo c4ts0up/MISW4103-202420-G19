@@ -81,7 +81,9 @@ class MembersPage extends BasePage {
         const initialText = await buttonLocator.textContent();
 
         await buttonLocator.click();
-        await expect(buttonLocator).not.toHaveText(initialText);
+        if (initialText !== null) {
+            await expect(buttonLocator).not.toHaveText(initialText);
+        }
 
         return await buttonLocator.textContent();
     }

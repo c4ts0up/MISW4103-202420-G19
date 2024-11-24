@@ -1,6 +1,6 @@
 import {faker} from "@faker-js/faker";
-import CountryLanguage = require("@ladjs/country-language");
-import RandExp = require("randexp");
+import * as CountryLanguage from "@ladjs/country-language";
+import RandExp from "randexp";
 
 export enum LANGUAGE_GENERATION_OPTIONS {
     LONG = `^[a-z]{4096}$`,
@@ -55,13 +55,23 @@ export class SettingsRandomProvider implements SettingsProvider {
 export class SettingsRelatedProvider implements SettingsProvider {
 
     getValidLanguage(): string {
-        throw new Error("Method not implemented.");
+        const codes = [
+            'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'ru', 'ja'
+        ];
+        return faker.helpers.arrayElement(codes);
     }
 
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
+        if (option === LANGUAGE_GENERATION_OPTIONS.LONG) {
+            return faker.lorem.words(4096).replace(/\s+/g, '').substring(0, 4096);
+        } else if (option === LANGUAGE_GENERATION_OPTIONS.SHORT) {
+            return "";
+        }
+
+        return "invalid-lang";
     }
 }
+
 
 
 /**
@@ -69,11 +79,32 @@ export class SettingsRelatedProvider implements SettingsProvider {
  */
 export class SettingsAPrioriProvider implements SettingsProvider {
 
-    getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
+    private static readonly VALID_LANGUAGES = [
+        'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'ru', 'ja'
+    ];
+
+    private static readonly INVALID_SHORT_LANGUAGES = [
+        'xx', 'yz', 'zz', 'ab', 'cd', 'ef', 'gh', 'ij', 'kl', 'mn', 'op', 'qr', 'st', 'uv', 'wx', 'yy'
+    ];
+
+    private static readonly INVALID_LONG_LANGUAGE = "a".repeat(4096);
+
+    private static getRandomOption(options: string[]): string {
+        return faker.helpers.arrayElement(options);
     }
 
     getValidLanguage(): string {
-        throw new Error("Method not implemented.");
+        return SettingsAPrioriProvider.getRandomOption(SettingsAPrioriProvider.VALID_LANGUAGES);
+    }
+
+    getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
+        switch (option) {
+            case LANGUAGE_GENERATION_OPTIONS.LONG:
+                return SettingsAPrioriProvider.INVALID_LONG_LANGUAGE;
+            case LANGUAGE_GENERATION_OPTIONS.SHORT:
+                return SettingsAPrioriProvider.getRandomOption(SettingsAPrioriProvider.INVALID_SHORT_LANGUAGES);
+            default:
+                return this.getValidLanguage();
+        }
     }
 }

@@ -44,8 +44,17 @@ class EditorPage extends BasePage {
     async fillScheduleData(date: string, time: string) {
         logger.info(`Filling the schedule data with date = ${date}, time = ${time}`);
         await this.page.click(this.scheduleRadio);
+
         await this.page.waitForTimeout(100);
+        const dateField = await this.page.$(this.dateInput);
+        await dateField!.click();
+        await dateField!.press('Control+A');
         await this.page.fill(this.dateInput, date);
+
+        const timeField = await this.page.$(this.timeInput);
+        await timeField!.click();
+        await timeField!.press('Control+A');
+        await timeField!.press('Backspace');
         await this.page.fill(this.timeInput, time);
     }
 
