@@ -11,7 +11,7 @@
 import {test} from "@playwright/test";
 import SettingsPage, {SubSettingsSelectors} from "./pages/settingsPage";
 import {config} from "./config/config";
-import {language_content_pe6} from "./data/blog";
+import {language_content_pe5, language_content_pe6} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 
@@ -66,7 +66,7 @@ test.describe('F8', async () => {
             )
         );
         // AND escribo el código del idioma válido
-        await settingsPage.changeLanguage(language_content_pe6.language);
+        await settingsPage.changeLanguage(language_content_pe5.language);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
