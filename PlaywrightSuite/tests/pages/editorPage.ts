@@ -1,6 +1,7 @@
 import {BasePage} from "./basePage";
 import {Page} from "playwright";
 import logger from "../utils/logger";
+import {expect} from "@playwright/test";
 
 /**
  * Representa la página de edición de posts
@@ -44,8 +45,8 @@ class EditorPage extends BasePage {
         logger.info(`Filling the schedule data with date = ${date}, time = ${time}`);
         await this.page.click(this.scheduleRadio);
         await this.page.waitForTimeout(100);
-        await this.page.locator(this.dateInput).fill(date);
-        await this.page.locator(this.timeInput).fill(time);
+        await this.page.fill(this.dateInput, date);
+        await this.page.fill(this.timeInput, time);
     }
 
     async confirmSchedulePost() {
@@ -63,17 +64,7 @@ class EditorPage extends BasePage {
 
     async validateInvalidSchedulePost(date: string, time: string) {
         logger.info(`Validating invalid schedule post with date = ${date}, time = ${time}`);
-        try {
-            const errorMessage = this.page.locator(this.errorMessageSelector);
-            if (errorMessage) {
-                const messageText = await errorMessage.innerText();
-                logger.error('Error al programar la publicación con fecha/hora inválida:', messageText);
-            } else {
-                logger.error('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
-            }
-        } catch (error) {
-            logger.error('Error: no se recibió un mensaje de error cuando se ingresó una fecha/hora inválida.');
-        }
+        await expect(this.page.locator(this.errorMessageSelector)).toBeVisible();
     }
 }
 

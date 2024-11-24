@@ -1,6 +1,4 @@
 import {faker} from "@faker-js/faker";
-import CountryLanguage = require("@ladjs/country-language");
-import RandExp = require("randexp");
 
 export enum DATE_GENERATION_OPTIONS {
     PAST,
@@ -65,22 +63,74 @@ export class PostRandomProvider implements PostProvider {
     }
     getValidDate(): string {
         const futureDate = faker.date.future({years: 1});
-        return `${futureDate.getFullYear()}-${futureDate.getMonth()}-${futureDate.getDate()}`;
+
+        const month = futureDate.getMonth();
+        const date = futureDate.getDate();
+
+        let monthString = "", dateString = "";
+
+        // arreglo del formato de mes
+        if (month < 10) monthString += "0";
+        monthString += month.toString();
+
+        // arreglo del formato de día
+        if (date < 10) dateString += "0";
+        dateString += date.toString();
+
+        return `${futureDate.getFullYear()}-${monthString}-${dateString}`;
     }
     getValidTime(): string {
         const futureDate = faker.date.future({years: 1});
-        return `${futureDate.getHours()}:${futureDate.getMinutes()}`;
+
+        const hours = futureDate.getHours();
+        const minutes = futureDate.getMinutes();
+
+        let hoursString = "", minutesString = "";
+
+        // arreglo del formato de horas
+        if (hours < 10) hoursString += "0";
+        hoursString += hours.toString();
+
+        // arreglo del formato de minutos
+        if (minutes < 10) minutesString += "0";
+        minutesString += minutes.toString();
+
+        return `${hoursString}:${minutesString}`;
     }
     getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
+        let year: number, month: number, date: number;
+
         if (option == DATE_GENERATION_OPTIONS.PAST) {
             const pastDate = faker.date.past({years: 1});
-            return `${pastDate.getFullYear()}-${pastDate.getMonth()}-${pastDate.getDate()}`;
+            year = pastDate.getFullYear();
+            month = pastDate.getMonth();
+            date = pastDate.getDate();
         }
         else if (option == DATE_GENERATION_OPTIONS.OVERFLOW) {
             const futureDate = faker.date.future({years: 1});
-            return `${futureDate.getFullYear()}-${faker.number.int({min: 13, max: 16})}-${futureDate.getDate()}`;
+            year = futureDate.getFullYear();
+            month = faker.number.int({min: 13, max: 16});
+            date = futureDate.getDate();
         }
-        else return "2023-02-29"
+        else {
+            year = 2023;
+            month = 2;
+            date = 29;
+        }
+
+        let yearString = `${year}`, monthString = "", dateString = "";
+
+        // año no requiere arreglo
+
+        // month fix
+        if (month < 10) monthString += "0";
+        monthString += month.toString();
+
+        // date fix
+        if (date < 10) dateString += "0";
+        dateString += date.toString();
+
+        return `${yearString}-${monthString}-${dateString}`
     }
     getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
         let hours: number, minutes: number;
@@ -102,12 +152,12 @@ export class PostRandomProvider implements PostProvider {
 
         let hoursString = "", minutesString = "";
         // ajusta las horas
-        if (hours < 10) hoursString = `0${hours}`;
-        else hoursString = `${hours}`;
+        if (hours < 10) hoursString += "0";
+        hoursString += hours.toString();
 
         // ajusta los minutos
-        if (minutes < 10) minutesString = `0${minutes}`;
-        else minutesString = `${minutes}`;
+        if (minutes < 10) minutesString += "0";
+        minutesString += minutes.toString();
 
         return `${hoursString}:${minutesString}`;
     }

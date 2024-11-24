@@ -151,8 +151,9 @@ test.describe('F6', async () => {
      * AND confirmo la programación de la publicación
      * THEN debería recibir un mensaje de error por fecha inválida
      */
+    // FIXME: la interfaz automáticamente modifica fechas inválidas. Si se desea replicar el mensaje de fallo, utilizar la hora actual
     const e2 = 'E002-programar-publicacion-invalida'
-    test.fixme(e2, async ( {page, browserName, dataProvider }) => {
+    test(e2, async ( {page, browserName, dataProvider }) => {
         test.slow();
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
@@ -161,7 +162,7 @@ test.describe('F6', async () => {
         const content = dataProvider.postProvider.getValidContent();
         // TODO: dateInvalid x timeInvalid = 4 casos. Mismo día, horas pasadas; distinto día, horas futuras, etc.
         const dateInvalid = dataProvider.postProvider.getInvalidDate(DATE_GENERATION_OPTIONS.PAST);
-        const timeInvalid = dataProvider.postProvider.getValidTime();
+        const timeInvalid = dataProvider.postProvider.getInvalidTime(TIME_GENERATION_OPTIONS.OVERFLOW);
 
         logger.info(`title = ${title}`);
         logger.info(`content = ${content}`);
