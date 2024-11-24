@@ -1,7 +1,8 @@
+const config = require('../utils/config.js');
 class SettingsPage {
     constructor(driver) {
         this.driver = driver;
-        this.settingsUlr = 'http://localhost:2368/ghost/#/settings/';
+        this.settingsUrl = `${config.baseUrl}/ghost/#/settings/`
     }
 
     async navigateToSettings() {

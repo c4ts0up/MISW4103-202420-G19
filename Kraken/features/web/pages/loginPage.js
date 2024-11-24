@@ -1,13 +1,16 @@
+const config = require('../utils/config.js');
 class LoginPage {
     constructor(driver) {
         this.driver = driver;
         this.emailField = 'input[name="identification"]';
         this.passwordField = 'input[name="password"]';
         this.loginButton = 'button[type="submit"]';
+        this.baseUrl = config.baseUrl;
     }
 
     async login(username, password) {
-        await this.driver.url('http://localhost:2368/ghost/#/signin');
+        const loginUrl = `${this.baseUrl}/ghost/#/signin`;
+        await this.driver.url(loginUrl);
         let emailField = await this.driver.$(this.emailField);
         await emailField.setValue(username);
         let passwordField = await this.driver.$(this.passwordField);

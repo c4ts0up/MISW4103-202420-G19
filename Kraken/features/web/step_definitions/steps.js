@@ -6,6 +6,7 @@ const SettingsPage = require('../pages/settingsPage');
 const LanguageSettingsPage = require('../pages/languageSettingsPage');
 const { takeScreenshot } = require('../utils/screenshotUtils');
 const { faker } = require('@faker-js/faker');
+const config = require('../utils/config.js');
 
 // Publish Post
 Given('I am correctly authenticated with {kraken-string} and {kraken-string} on {string}', async function (username, password, scenario) {
@@ -15,7 +16,7 @@ Given('I am correctly authenticated with {kraken-string} and {kraken-string} on 
 });
 
 Given('I am creating a new post on {string}', async function (scenario) {
-    await this.driver.url(`http://localhost:2368/ghost/#/editor/post`);
+    await this.driver.url(`${config.baseUrl}/ghost/#/editor/post`);
     await takeScreenshot(this.driver, '02_new_post_page', scenario);
 });
 
@@ -90,7 +91,7 @@ When('I press the button to schedule the post on {string}', async function (scen
 });
 
 Then('The post is correctly scheduled on {string}', async function (scenario) {
-    await this.driver.url('http://localhost:2368/ghost/#/posts?type=scheduled');
+    await this.driver.url(`${config.baseUrl}/ghost/#/posts?type=scheduled`);
     await takeScreenshot(this.driver, '08_post_scheduled', scenario);
 });
 
@@ -103,12 +104,12 @@ Then('I should get a message error for invalid date on {string}', async function
 // Create member
 Given('I go to the members page on {string}', async function (scenario) {
     const memberPage = new MemberPage(this.driver);
-    await memberPage.driver.url('http://localhost:2368/ghost/#/members');
+    await memberPage.driver.url(`${config.baseUrl}/ghost/#/members`);
     await takeScreenshot(this.driver, '02_members_page', scenario);
 });
 
 When('I want to add a new member on {string}', async function (scenario) {
-    await this.driver.url('http://localhost:2368/ghost/#/members/new');
+    await this.driver.url(`${config.baseUrl}/ghost/#/members/new`);
     await takeScreenshot(this.driver, '03_new_member', scenario);
 });
 
@@ -195,12 +196,12 @@ Then('I should not see a red border indicating a validation error on {string}', 
 });
 
 Then('The member is successfully created and listed in members page on {string}', async function (scenario) {
-    await this.driver.url('http://localhost:2368/ghost/#/members');
+    await this.driver.url(`${config.baseUrl}/ghost/#/members`);
     await takeScreenshot(this.driver, '06_member_created', scenario);
 });
 
 Then('The member is still successfully created and listed in members page on {string}', async function (scenario) {
-    await this.driver.url('http://localhost:2368/ghost/#/members');
+    await this.driver.url(`${config.baseUrl}/ghost/#/members`);
     await takeScreenshot(this.driver, '09_member_created', scenario);
 });
 
@@ -213,7 +214,7 @@ Given('I navigate to the settings page on {string}', async function (scenario) {
 
 Given('I navigate to the language settings page on {string}', async function (scenario) {
     const languageSettingsPage = new LanguageSettingsPage(this.driver);
-    await languageSettingsPage.driver.url('http://localhost:2368/ghost/#/settings/publication-language');
+    await languageSettingsPage.driver.url(`${config.baseUrl}/ghost/#/settings/publication-language`);
     await takeScreenshot(this.driver, '03_language_settings_page', scenario);
     
 });
@@ -265,7 +266,7 @@ When('I save the configuration with the new language on {string}', async functio
 });
 
 Then('The language is updated successfully on {string}', async function (scenario) {
-    await this.driver.url('http://localhost:2368/ghost/#/settings/publication-language');
+    await this.driver.url(`${config.baseUrl}/ghost/#/settings/publication-language`);
     await takeScreenshot(this.driver, '07_language_updated', scenario);
 });
 

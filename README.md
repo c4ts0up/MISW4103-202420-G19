@@ -39,7 +39,8 @@ Para ejecutar las pruebas en kraken debe seguir los siguientes pasos:
 3. Ingresar a la carpeta de Kraken `cd Kraken`
 4. Instalar Kraken localmente `npm install kraken-node`
 5. En el archivo `properties.json` actualice las credenciales para conectarse a ghost
-6. Ejecutar las pruebas utilizando alguno de los siguientes comandos:
+6. En el archivo `features/utils/config.js` actualicé su baseUrl en caso de que sea diferente
+7. Ejecutar las pruebas utilizando alguno de los siguientes comandos:
     - `./node_modules/kraken-node/bin/kraken-node run`
     - `npx kraken-node run`
 
