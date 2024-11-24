@@ -12,10 +12,11 @@
 import {expect} from "@playwright/test";
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
-import {member_content_pe3, member_content_pe4} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 import {test} from "./fixtures/dataGenerator";
+import logger from "./utils/logger";
+import {EMAIL_GENERATION_OPTIONS} from "./data/memberProvider";
 
 test.describe('F7', async () => {
 
@@ -34,6 +35,12 @@ test.describe('F7', async () => {
     test(e3, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource)
 
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+
         // GIVEN estoy loggeado como administrador
 
         // AND estoy en la página de creación de miembros
@@ -49,10 +56,7 @@ test.describe('F7', async () => {
 
         // AND agrego datos válidos
         // AND cambio el correo por un correo válido
-        await membersPage.createMember(
-            member_content_pe3.name,
-            member_content_pe3.email
-        );
+        await membersPage.createMember(mockName, mockEmail);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -75,7 +79,7 @@ test.describe('F7', async () => {
         // THEN el nuevo miembro debería aparecer en la lista de miembros
         await membersPage.navigateTo();
         await membersPage.reload();
-        const createdMember = await membersPage.findMember(member_content_pe3.email);
+        const createdMember = await membersPage.findMember(mockEmail);
         expect(createdMember).not.toBeNull();
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
@@ -107,6 +111,14 @@ test.describe('F7', async () => {
         test.slow();
         const membersPage = new MembersPage(page, config.membersPage.resource)
 
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_AT);
+        const mockValidEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+        logger.info(`mockValidEmail = ${mockValidEmail}`);
+
         // GIVEN estoy loggeado como administrador
 
         // AND estoy en la página de creación de miembros
@@ -122,10 +134,7 @@ test.describe('F7', async () => {
 
         // AND agrego datos válidos
         // AND cambio el correo por un correo inválido
-        await membersPage.createMember(
-            member_content_pe4.name,
-            member_content_pe4.email_invalid
-        );
+        await membersPage.createMember(mockName, mockInvalidEmail);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -146,7 +155,7 @@ test.describe('F7', async () => {
         );
 
         // AND cambio el correo por un correo válido
-        await membersPage.inputEmail(member_content_pe4.email_valid);
+        await membersPage.inputEmail(mockValidEmail);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -183,7 +192,7 @@ test.describe('F7', async () => {
         await membersPage.navigateTo();
         await membersPage.reload();
 
-        const createdMember = await membersPage.findMember(member_content_pe3.email);
+        const createdMember = await membersPage.findMember(mockValidEmail);
         expect(createdMember).not.toBeNull();
 
         await myScreenshot(page, screenshotPath(
