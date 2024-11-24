@@ -7,12 +7,13 @@
  * [Link de Wiki](https://github.com/c4ts0up/MISW4103-202420-G26/wiki/Listado-de-Funcionalidades#funcionalidad-5-modificar-el-correo-electr%C3%B3nico-de-un-usuario-suscriptor)
  */
 
-import {expect, test} from '@playwright/test';
+import {expect} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {faker} from '@faker-js/faker';
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
+import {test} from "./fixtures/dataGenerator";
 
 test.describe('F5', async () => {
 
@@ -29,7 +30,7 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Saved"
      */
     const e8 = 'E008-correo-valido';
-    test(e8, async ( { page, browserName } ) => {
+    test(e8, async ( { page, browserName, memberProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -135,7 +136,7 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e9 = "E009-correo-invalido"
-    test(e9, async ( { page, browserName } ) => {
+    test(e9, async ( { page, browserName, memberProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();
@@ -245,7 +246,7 @@ test.describe('F5', async () => {
      * AND no se debería guardar el nuevo correo
      */
     const e10 = "E010-correo-repetido";
-    test(e10, async ( { page, browserName } ) => {
+    test(e10, async ( { page, browserName, memberProvider } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const xMockName = faker.person.fullName();

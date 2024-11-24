@@ -7,12 +7,13 @@
  * [Link de wiki](https://github.com/c4ts0up/MISW4103-202420-G26/wiki/Listado-de-Funcionalidades#funcionalidad-3-eliminar-un-miembro-de-la-p%C3%A1gina)
  */
 
-import {expect, test} from '@playwright/test';
+import {expect} from '@playwright/test';
 import MembersPage from "./pages/membersPage";
 import {config} from "./config/config";
 import {faker} from "@faker-js/faker";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
+import {test} from "./fixtures/dataGenerator";
 
 test.describe('F3', async () => {
 
@@ -28,7 +29,7 @@ test.describe('F3', async () => {
      * AND miembro no se puede hallar
      */
     const e7 = 'E007-delete-member';
-    test(e7, async( { page, browserName } ) => {
+    test(e7, async( { page, browserName, memberProvider } ) => {
         let membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = faker.person.fullName();

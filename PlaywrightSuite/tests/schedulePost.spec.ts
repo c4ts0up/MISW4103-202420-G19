@@ -9,13 +9,13 @@
  * [Link de Wiki](https://github.com/c4ts0up/MISW4103-202420-G26/wiki/Listado-de-Funcionalidades#funcionalidad-6-programar-una-publicaci%C3%B3n)
  */
 
-import {test} from "@playwright/test";
 import {config} from "./config/config";
 import EditorPage from "./pages/editorPage";
 import ScheduledPage from "./pages/scheduledPage";
 import {post_content_pe1, post_content_pe2} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
+import {test} from "./fixtures/dataGenerator";
 
 test.describe('F6', async () => {
 
@@ -31,7 +31,7 @@ test.describe('F6', async () => {
      * AND la publicación debería aparecer en la lista de publicaciones programadas
      */
     const e1 = 'E001-programar-valido-publicacion'
-    test(e1, async ( { page, browserName } ) => {
+    test(e1, async ( { page, browserName, memberProvider } ) => {
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
@@ -147,7 +147,7 @@ test.describe('F6', async () => {
      * THEN debería recibir un mensaje de error por fecha inválida
      */
     const e2 = 'E002-programar-publicacion-invalida'
-    test.fixme(e2, async ( {page, browserName }) => {
+    test.fixme(e2, async ( {page, browserName, memberProvider }) => {
         test.slow();
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);

@@ -8,12 +8,12 @@
  * [Link de Wiki](https://github.com/c4ts0up/MISW4103-202420-G26/wiki/Listado-de-Funcionalidades#funcionalidad-8-configurar-el-idioma-de-las-publicaciones)
  */
 
-import {test} from "@playwright/test";
 import SettingsPage, {SubSettingsSelectors} from "./pages/settingsPage";
 import {config} from "./config/config";
 import {language_content_pe5, language_content_pe6} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
+import {test} from "./fixtures/dataGenerator";
 
 test.describe('F8', async () => {
 
@@ -28,7 +28,7 @@ test.describe('F8', async () => {
      * THEN el idioma debería guardarse correctamente
      */
     const e5 = 'E005-cambiar-lenguaje-valido';
-    test(e5, async ( { page, browserName } ) => {
+    test(e5, async ( { page, browserName, memberProvider } ) => {
         test.slow();
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
@@ -99,7 +99,7 @@ test.describe('F8', async () => {
      * THEN el idioma no debería guardarse
      */
     const e6 = 'E006-cambiar-lenguaje-invalido';
-    test(e6, async ( { page, browserName } ) => {
+    test(e6, async ( { page, browserName, memberProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         // GIVEN estoy loggeado como administrador
