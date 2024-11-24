@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
+    "@ladjs/country-language": "^1.0.3",
     "pino": "^9.5.0",
     "pino-pretty": "^13.0.0",
     "playwright-suite": "file:"
