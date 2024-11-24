@@ -10,10 +10,11 @@
 
 import SettingsPage, {SubSettingsSelectors} from "./pages/settingsPage";
 import {config} from "./config/config";
-import {language_content_pe5, language_content_pe6} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 import {test} from "./fixtures/dataGenerator";
+import logger from "./utils/logger";
+import {LANGUAGE_GENERATION_OPTIONS} from "./data/settingsProvider";
 
 test.describe('F8', async () => {
 
@@ -31,6 +32,10 @@ test.describe('F8', async () => {
     test(e5, async ( { page, browserName, dataProvider } ) => {
         test.slow();
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
+
+        const language = dataProvider.settingsProvider.getInvalidLanguage(LANGUAGE_GENERATION_OPTIONS.LONG);
+
+        logger.info(`language = ${language}`);
 
         // GIVEN estoy loggeado como administrador
 
@@ -66,7 +71,7 @@ test.describe('F8', async () => {
             )
         );
         // AND escribo el código del idioma válido
-        await settingsPage.changeLanguage(language_content_pe5.language);
+        await settingsPage.changeLanguage(language);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -102,6 +107,10 @@ test.describe('F8', async () => {
     test(e6, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
+        const language = dataProvider.settingsProvider.getInvalidLanguage(LANGUAGE_GENERATION_OPTIONS.LONG);
+
+        logger.info(`language = ${language}`);
+
         // GIVEN estoy loggeado como administrador
 
         // AND estoy en la página de configuración
@@ -136,7 +145,7 @@ test.describe('F8', async () => {
             )
         );
         // AND escribo el código del idioma inválido
-        await settingsPage.changeLanguage(language_content_pe6.language);
+        await settingsPage.changeLanguage(language);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,

@@ -1,9 +1,9 @@
 import {faker} from "@faker-js/faker";
 import CountryLanguage = require("@ladjs/country-language");
-import * as RandExp from "randexp";
+import RandExp = require("randexp");
 
 export enum LANGUAGE_GENERATION_OPTIONS {
-    LONG = `^[a-zA-Z]{4096}$`,
+    LONG = `^[a-z]{4096}$`,
     SHORT = `^$`,
 }
 
