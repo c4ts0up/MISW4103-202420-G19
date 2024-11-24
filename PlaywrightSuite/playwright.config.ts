@@ -44,6 +44,14 @@ export default defineConfig({
         storageState: 'playwright/.auth/user.json', // Path to the storage state file
       },
       dependencies: ['setup'], // Include setup if necessary
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup']
     }
     // {
     //   name: 'webkit',
