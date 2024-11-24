@@ -12,10 +12,11 @@
 import {config} from "./config/config";
 import EditorPage from "./pages/editorPage";
 import ScheduledPage from "./pages/scheduledPage";
-import {post_content_pe1, post_content_pe2} from "./data/blog";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
 import {test} from "./fixtures/dataGenerator";
+import logger from "./utils/logger";
+import {DATE_GENERATION_OPTIONS, TIME_GENERATION_OPTIONS} from "./data/postProvider";
 
 test.describe('F6', async () => {
 
@@ -35,6 +36,16 @@ test.describe('F6', async () => {
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
+        const title = dataProvider.postProvider.getValidTitle();
+        const content = dataProvider.postProvider.getValidContent();
+        const date = dataProvider.postProvider.getValidDate();
+        const time = dataProvider.postProvider.getValidTime();
+
+        logger.info(`title = ${title}`);
+        logger.info(`content = ${content}`);
+        logger.info(`date = ${date}`);
+        logger.info(`time = ${time}`);
+
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
@@ -47,10 +58,7 @@ test.describe('F6', async () => {
 
         // AND la publicación tiene título y cuerpo
         await editorPage.navigateTo();
-        await editorPage.createPost(
-            post_content_pe1.title,
-            post_content_pe1.content
-        );
+        await editorPage.createPost(title, content);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -82,10 +90,7 @@ test.describe('F6', async () => {
         );
 
         // AND ingreso una fecha válida de publicación
-        await editorPage.fillScheduleData(
-            post_content_pe1.date,
-            post_content_pe1.time
-        );
+        await editorPage.fillScheduleData(date, time);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -152,6 +157,17 @@ test.describe('F6', async () => {
         const editorPage = new EditorPage(page, config.editorPage.resource);
         const scheduledPage = new ScheduledPage(page, config.scheduledPage.resource);
 
+        const title = dataProvider.postProvider.getValidTitle();
+        const content = dataProvider.postProvider.getValidContent();
+        // TODO: dateInvalid x timeInvalid = 4 casos. Mismo día, horas pasadas; distinto día, horas futuras, etc.
+        const dateInvalid = dataProvider.postProvider.getInvalidDate(DATE_GENERATION_OPTIONS.PAST);
+        const timeInvalid = dataProvider.postProvider.getValidTime();
+
+        logger.info(`title = ${title}`);
+        logger.info(`content = ${content}`);
+        logger.info(`dateInvalid = ${dateInvalid}`);
+        logger.info(`timeInvalid = ${timeInvalid}`);
+
         // GIVEN estoy loggeado como administrador
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
@@ -164,10 +180,7 @@ test.describe('F6', async () => {
 
         // AND la publicación tiene título y cuerpo
         await editorPage.navigateTo();
-        await editorPage.createPost(
-            post_content_pe2.title,
-            post_content_pe2.content
-        );
+        await editorPage.createPost(title, content);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -200,10 +213,7 @@ test.describe('F6', async () => {
 
         // AND ingreso una fecha inválida de publicación
         // FIXME: no se borra la opción de la hora
-        await editorPage.fillScheduleData(
-            post_content_pe2.date,
-            post_content_pe2.time
-        );
+        await editorPage.fillScheduleData(dateInvalid, timeInvalid);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -234,10 +244,7 @@ test.describe('F6', async () => {
         );
 
         // THEN debería recibir un mensaje de error por fecha inválida
-        await editorPage.validateInvalidSchedulePost(
-            post_content_pe2.date,
-            post_content_pe2.time
-        );
+        await editorPage.validateInvalidSchedulePost(dateInvalid, timeInvalid);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,

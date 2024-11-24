@@ -43,6 +43,7 @@ class SettingsPage extends BasePage {
         await this.page.click(this.saveButton);
     }
 
+    // FIXME: usar expect-based
     async failUpdateLanguage() {
         logger.info(`Confirming failed language update`);
         try {

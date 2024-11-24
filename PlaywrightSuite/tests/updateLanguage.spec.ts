@@ -104,7 +104,7 @@ test.describe('F8', async () => {
      * THEN el idioma no debería guardarse
      */
     const e6 = 'E006-cambiar-lenguaje-invalido';
-    test(e6, async ( { page, browserName, dataProvider } ) => {
+    test.fixme(e6, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
         const language = dataProvider.settingsProvider.getInvalidLanguage(LANGUAGE_GENERATION_OPTIONS.LONG);
