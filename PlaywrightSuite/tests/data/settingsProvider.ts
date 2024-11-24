@@ -1,9 +1,10 @@
 import {faker} from "@faker-js/faker";
 import CountryLanguage = require("@ladjs/country-language");
+import * as RandExp from "randexp";
 
 export enum LANGUAGE_GENERATION_OPTIONS {
-    LONG = `/^[a-zA-Z]{4096}$/`,
-    SHORT = `/^$/`,
+    LONG = `^[a-zA-Z]{4096}$`,
+    SHORT = `^$`,
 }
 
 
@@ -32,7 +33,7 @@ export interface SettingsProvider {
  */
 export class SettingsRandomProvider implements SettingsProvider {
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
-        return faker.helpers.fromRegExp(LANGUAGE_GENERATION_OPTIONS[option]);
+        return new RandExp(option).gen();
     }
 
     getValidLanguage(): string {
