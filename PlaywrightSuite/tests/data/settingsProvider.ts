@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import * as CountryLanguage from "@ladjs/country-language";
+import CountryLanguage = require("@ladjs/country-language");
 
 export enum LANGUAGE_GENERATION_OPTIONS {
     LONG = `/^[a-zA-Z]{4096}$/`,
