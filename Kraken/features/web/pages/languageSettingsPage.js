@@ -30,9 +30,7 @@ class LanguageSettingsPage {
             await this.page.waitForSelector(this.saveButton, { state: 'disabled' });
             console.log('El botón de guardar está deshabilitado, el idioma no es válido');
         } catch (error) {
-            let saveButton = await this.driver.$('button.bg-green');
-            await saveButton.click();
-            console.log('El botón de guardar está habilitado aunque el idioma es valido y se ha guardado');
+            console.log('El botón de guardar se habilitó aunque el idioma es invalido y se ha guardado');
         }
     }
 }
