@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import RandExp from "randexp";
+import RandExp = require("randexp");
 
 export enum NAME_GENERATION_OPTIONS {
     LONG = `^[A-Z][a-z]{91} [A-Z][a-z]{100}$`,
@@ -86,7 +86,6 @@ export class MemberRelatedProvider implements MemberProvider {
     }
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        this.generateInitialData();
         switch (option) {
             case EMAIL_GENERATION_OPTIONS.NO_AT:
                 return this.memberEmail.replace('@', '');
@@ -113,7 +112,6 @@ export class MemberRelatedProvider implements MemberProvider {
     }
 
     getValidEmail(): string {
-        this.generateInitialData();
         return this.memberEmail;
     }
 
@@ -131,6 +129,8 @@ export class MemberAPrioriProvider implements MemberProvider {
 
     private valid_name: string;
     private valid_email: string;
+    private used_name: boolean;
+    private used_email: boolean;
 
     private static readonly VALID_NAMES = [
         "John Doe",
@@ -162,17 +162,31 @@ export class MemberAPrioriProvider implements MemberProvider {
         "ana.rodriguez@example.com"
     ];
 
-    private getRandomElement(array: string[]): string {
-        return array[Math.floor(Math.random() * array.length)];
+    constructor() {
+        this.generateInitialData();
+        this.used_name = false;
+        this.used_email = false;
     }
 
     private generateInitialData(): void {
-        this.valid_name = this.getRandomElement(MemberAPrioriProvider.VALID_NAMES);
-        this.valid_email = this.getRandomElement(MemberAPrioriProvider.VALID_EMAILS);
+        // las listas deben tener la misma longitud
+        if (MemberAPrioriProvider.VALID_EMAILS.length != MemberAPrioriProvider.VALID_NAMES.length) {
+            throw new Error("La longitud de la lista de nombres y correos no es igual");
+        }
+
+        const randomIndex = faker.number.int({min: 0, max: MemberAPrioriProvider.VALID_NAMES.length-1});
+
+        this.valid_name = MemberAPrioriProvider.VALID_NAMES[randomIndex];
+        this.valid_email = MemberAPrioriProvider.VALID_EMAILS[randomIndex];
     }  
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
-        this.generateInitialData();
+        if (this.used_email) {
+            this.generateInitialData();
+            this.used_email = false;
+            this.used_name = false;
+        }
+        this.used_email = true;
         switch (option) {
             case EMAIL_GENERATION_OPTIONS.NO_AT:
                 return this.valid_email.replace('@', '');
@@ -186,7 +200,12 @@ export class MemberAPrioriProvider implements MemberProvider {
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
-        this.generateInitialData();
+        if (this.used_name) {
+            this.generateInitialData();
+            this.used_email = false;
+            this.used_name = false;
+        }
+        this.used_name = true;
         switch (option) {
             case NAME_GENERATION_OPTIONS.LONG:
                 const longNameSuffix = 'a'.repeat(91);
@@ -199,12 +218,22 @@ export class MemberAPrioriProvider implements MemberProvider {
     }
 
     getValidEmail(): string {
-        this.generateInitialData();
+        if (this.used_email) {
+            this.generateInitialData();
+            this.used_email = false;
+            this.used_name = false;
+        }
+        this.used_email = true;
         return this.valid_email;
     }
 
     getValidName(): string {
-        this.generateInitialData();
+        if (this.used_name) {
+            this.generateInitialData();
+            this.used_email = false;
+            this.used_name = false;
+        }
+        this.used_name = true;
         return this.valid_name;
     }
 }
