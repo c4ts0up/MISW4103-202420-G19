@@ -93,7 +93,7 @@ test.describe('F7', async () => {
 
 
     /**
-     * ### E4: Crear un nuevo miembro con un correo inválido
+     * ### E4: Crear un nuevo miembro con un correo inválido (sin arroba)
      *
      * GIVEN estoy loggeado como administrador
      * AND estoy en la página de creación de miembros
@@ -106,7 +106,7 @@ test.describe('F7', async () => {
      * THEN el borde rojo del campo de correo debería desaparecer
      * AND el nuevo miembro debería aparecer en la lista de miembros
      */
-    const e4 = 'E004-create-invalid-member';
+    const e4 = 'E004-create-invalid-member-sin-arroba';
     test(e4, async ( { page, browserName, dataProvider } ) => {
         test.slow();
         const membersPage = new MembersPage(page, config.membersPage.resource)
@@ -200,6 +200,233 @@ test.describe('F7', async () => {
                 config.sut.version,
                 browserName,
                 e4,
+                "07-members-page"
+            )
+        );
+    });
+
+
+    /**
+     * ### E14: Crear un nuevo miembro con un correo inválido (sin dominio)
+     *
+     * GIVEN estoy loggeado como administrador
+     * AND estoy en la página de creación de miembros
+     * WHEN creo un nuevo miembro
+     * AND agrego datos válidos
+     * AND cambio el correo por un correo inválido
+     * AND guardo el nuevo miembro
+     * AND cambio el correo por un correo válido
+     * AND guardo el nuevo miembro
+     * THEN el borde rojo del campo de correo debería desaparecer
+     * AND el nuevo miembro debería aparecer en la lista de miembros
+     */
+    const e14 = 'E014-create-invalid-member-sin-dominio';
+    test(e14, async ( { page, browserName, dataProvider } ) => {
+        test.slow();
+        const membersPage = new MembersPage(page, config.membersPage.resource)
+
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_DOMAIN);
+        const mockValidEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+        logger.info(`mockValidEmail = ${mockValidEmail}`);
+
+        // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de creación de miembros
+        await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "01-members-page"
+            )
+        );
+
+        // AND agrego datos válidos
+        // AND cambio el correo por un correo inválido
+        await membersPage.createMember(mockName, mockInvalidEmail);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "02-create-member"
+            )
+        );
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "03-member-saved"
+            )
+        );
+
+        // AND cambio el correo por un correo válido
+        await membersPage.inputEmail(mockValidEmail);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "04-changed-to-valid-email"
+            )
+        );
+
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "05-member-saved"
+            )
+        );
+
+        // THEN el borde rojo del campo de correo debería desaparecer
+        // (si hay borde rojo, este se hereda de la clase .error)
+        await membersPage.validateNoErrors();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "06-validate-no-errors"
+            )
+        );
+
+        // AND el nuevo miembro debería aparecer en la lista de miembros
+        await membersPage.navigateTo();
+        await membersPage.reload();
+
+        const createdMember = await membersPage.findMember(mockValidEmail);
+        expect(createdMember).not.toBeNull();
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e14,
+                "07-members-page"
+            )
+        );
+    });
+
+    /**
+     * ### E15: Crear un nuevo miembro con un correo inválido (demasiado largo)
+     *
+     * GIVEN estoy loggeado como administrador
+     * AND estoy en la página de creación de miembros
+     * WHEN creo un nuevo miembro
+     * AND agrego datos válidos
+     * AND cambio el correo por un correo inválido
+     * AND guardo el nuevo miembro
+     * AND cambio el correo por un correo válido
+     * AND guardo el nuevo miembro
+     * THEN el borde rojo del campo de correo debería desaparecer
+     * AND el nuevo miembro debería aparecer en la lista de miembros
+     */
+    const e15 = 'E015-create-invalid-member-muy-largo';
+    test(e15, async ( { page, browserName, dataProvider } ) => {
+        test.slow();
+        const membersPage = new MembersPage(page, config.membersPage.resource)
+
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.LONG);
+        const mockValidEmail = dataProvider.memberProvider.getValidEmail();
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+        logger.info(`mockValidEmail = ${mockValidEmail}`);
+
+        // GIVEN estoy loggeado como administrador
+
+        // AND estoy en la página de creación de miembros
+        await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "01-members-page"
+            )
+        );
+
+        // AND agrego datos válidos
+        // AND cambio el correo por un correo inválido
+        await membersPage.createMember(mockName, mockInvalidEmail);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "02-create-member"
+            )
+        );
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "03-member-saved"
+            )
+        );
+
+        // AND cambio el correo por un correo válido
+        await membersPage.inputEmail(mockValidEmail);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "04-changed-to-valid-email"
+            )
+        );
+
+        // AND guardo el nuevo miembro
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "05-member-saved"
+            )
+        );
+
+        // THEN el borde rojo del campo de correo debería desaparecer
+        // (si hay borde rojo, este se hereda de la clase .error)
+        await membersPage.validateNoErrors();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
+                "06-validate-no-errors"
+            )
+        );
+
+        // AND el nuevo miembro debería aparecer en la lista de miembros
+        await membersPage.navigateTo();
+        await membersPage.reload();
+
+        const createdMember = await membersPage.findMember(mockValidEmail);
+        expect(createdMember).not.toBeNull();
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e15,
                 "07-members-page"
             )
         );
