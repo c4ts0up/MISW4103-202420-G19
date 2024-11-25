@@ -35,6 +35,10 @@ class SettingsPage extends BasePage {
 
     async changeLanguage(language: string) {
         logger.info(`Changing language to language = ${language}`);
+        const languageField = await this.page.$(this.languageInput);
+        await languageField!.click();
+        await languageField!.press('Control+A');
+        await languageField!.press('Backspace');
         await this.page.fill(this.languageInput, language);
     }
 

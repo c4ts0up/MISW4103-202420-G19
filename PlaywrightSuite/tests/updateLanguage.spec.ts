@@ -33,7 +33,7 @@ test.describe('F8', async () => {
         test.slow();
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
-        const language = dataProvider.settingsProvider.getInvalidLanguage(LANGUAGE_GENERATION_OPTIONS.LONG);
+        const language = dataProvider.settingsProvider.getValidLanguage();
 
         logger.info(`language = ${language}`);
 

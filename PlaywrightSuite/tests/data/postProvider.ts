@@ -168,25 +168,91 @@ export class PostRandomProvider implements PostProvider {
  * Obtiene los datos de manera pseudoaleatoria. Los datos tienen relación entre ellos
  */
 export class PostRelatedProvider implements PostProvider {
-    getValidTitle(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidContent(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidDate(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidTime(): string {
-        throw new Error("Method not implemented.");
-    }
-    getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
-    }
-    getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
+
+    private postTitle: string;
+    private postContent: string;
+    private postDate: Date;
+    private postTime: string;
+
+    private generateInitialData(): void {
+        this.postTitle = faker.lorem.sentence();
+        this.postContent = faker.lorem.paragraph();
+        
+        this.postDate = faker.date.future();
+        const hours = this.postDate.getHours();
+        const minutes = this.postDate.getMinutes();
+        let hoursString = "", minutesString = "";
+
+        if (hours < 10) hoursString += "0";
+        hoursString += hours.toString();
+
+        if (minutes < 10) minutesString += "0";
+        minutesString += minutes.toString();
+
+        this.postTime = `${hoursString}:${minutesString}`;
     }
 
+
+    getValidTitle(): string {
+        this.generateInitialData();
+        return this.postTitle;
+    }
+
+    getValidContent(): string {
+        this.generateInitialData();
+        return this.postContent;
+    }
+
+    getValidDate(): string {
+        this.generateInitialData();
+        const year = this.postDate.getFullYear();
+        const month = this.postDate.getMonth() + 1;
+        const day = this.postDate.getDate();
+
+        let monthString = "", dayString = "";
+
+        if (month < 10) monthString += "0";
+        monthString += month.toString();
+
+        if (day < 10) dayString += "0";
+        dayString += day.toString();
+
+        return `${year}-${monthString}-${dayString}`;
+    }
+
+    getValidTime(): string {
+        this.generateInitialData();
+        return this.postTime;
+    }
+
+    getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
+        this.generateInitialData();
+        switch (option) {
+            case DATE_GENERATION_OPTIONS.PAST:
+                return faker.date.past().toISOString().split('T')[0];
+            case DATE_GENERATION_OPTIONS.OVERFLOW:
+                return `2024-13-01`;
+            case DATE_GENERATION_OPTIONS.LEAP_YEAR:
+                return `2023-02-29`;
+            default:
+                return this.getValidDate();
+        }
+    }
+
+    getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
+        this.generateInitialData();
+        switch (option) {
+            case TIME_GENERATION_OPTIONS.PAST:
+                const now = new Date();
+                let hours = faker.number.int({ min: 0, max: now.getHours() });
+                let minutes = faker.number.int({ min: 0, max: now.getMinutes() - 1 });
+                return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+            case TIME_GENERATION_OPTIONS.OVERFLOW:
+                return `25:00`;
+            default:
+                return this.getValidTime();
+        }
+    }
 }
 
 
@@ -194,23 +260,83 @@ export class PostRelatedProvider implements PostProvider {
  * Obtiene los datos almacenados para las pruebas
  */
 export class PostAPrioriProvider implements PostProvider {
-    getValidTitle(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidContent(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidDate(): string {
-        throw new Error("Method not implemented.");
-    }
-    getValidTime(): string {
-        throw new Error("Method not implemented.");
-    }
-    getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
-    }
-    getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
-        throw new Error("Method not implemented.");
+
+    private static readonly VALID_TITLES = [
+        "Post de prueba",
+        "Post de ejemplo",
+        "Artículo informativo",
+        "Post sobre automatización"
+    ];
+
+    private static readonly VALID_CONTENTS = [
+        "Este es el contenido de un post de prueba que se utilizará para las pruebas automatizadas.",
+        "Contenido de ejemplo para la prueba automatizada.",
+        "Este es un artículo sobre la automatización de procesos.",
+        "Información relevante sobre la gestión de proyectos."
+    ];
+
+    private static readonly VALID_DATES = [
+        "2024-12-01",
+        "2025-06-15",
+        "2024-11-30",
+        "2025-08-30"
+    ];
+
+    private static readonly VALID_TIMES = [
+        "14:30",
+        "09:00",
+        "18:45",
+        "23:59"
+    ];
+
+    private static readonly INVALID_DATE_PAST = "2022-05-15";
+    private static readonly INVALID_DATE_OVERFLOW = "2024-13-01";
+    private static readonly INVALID_DATE_LEAP_YEAR = "2025-02-29";
+
+    private static readonly INVALID_TIME_PAST = "02:00";
+    private static readonly INVALID_TIME_OVERFLOW = "25:00";
+
+    private static getRandomOption(options: string[]): string {
+        return faker.helpers.arrayElement(options);
     }
 
+    getValidTitle(): string {
+        return PostAPrioriProvider.getRandomOption(PostAPrioriProvider.VALID_TITLES);
+    }
+
+    getValidContent(): string {
+        return PostAPrioriProvider.getRandomOption(PostAPrioriProvider.VALID_CONTENTS);
+    }
+
+    getValidDate(): string {
+        return PostAPrioriProvider.getRandomOption(PostAPrioriProvider.VALID_DATES);
+    }
+
+    getValidTime(): string {
+        return PostAPrioriProvider.getRandomOption(PostAPrioriProvider.VALID_TIMES);
+    }
+
+    getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
+        switch (option) {
+            case DATE_GENERATION_OPTIONS.PAST:
+                return PostAPrioriProvider.INVALID_DATE_PAST;
+            case DATE_GENERATION_OPTIONS.OVERFLOW:
+                return PostAPrioriProvider.INVALID_DATE_OVERFLOW;
+            case DATE_GENERATION_OPTIONS.LEAP_YEAR:
+                return PostAPrioriProvider.INVALID_DATE_LEAP_YEAR;
+            default:
+                return this.getValidDate();
+        }
+    }
+
+    getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
+        switch (option) {
+            case TIME_GENERATION_OPTIONS.PAST:
+                return PostAPrioriProvider.INVALID_TIME_PAST;
+            case TIME_GENERATION_OPTIONS.OVERFLOW:
+                return PostAPrioriProvider.INVALID_TIME_OVERFLOW;
+            default:
+                return this.getValidTime();
+        }
+    }
 }
