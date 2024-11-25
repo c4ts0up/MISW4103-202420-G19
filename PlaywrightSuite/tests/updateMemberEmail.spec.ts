@@ -419,7 +419,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "01-login"
             )
         );
@@ -430,7 +430,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "02-pagina-miembros"
             )
         );
@@ -445,7 +445,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "03-miembro-creado"
             )
         );
@@ -456,7 +456,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "04-before-when"
             )
         );
@@ -476,7 +476,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "05-edit-member"
             )
         );
@@ -495,7 +495,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e11,
                 "06-after-validations"
             )
         );
@@ -531,7 +531,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "01-login"
             )
         );
@@ -542,7 +542,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "02-pagina-miembros"
             )
         );
@@ -557,7 +557,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "03-miembro-creado"
             )
         );
@@ -568,7 +568,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "04-before-when"
             )
         );
@@ -588,7 +588,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "05-edit-member"
             )
         );
@@ -597,7 +597,7 @@ test.describe('F5', async () => {
         expect(saveButtonResponse.trim()).toEqual('Retry');
         // AND se debería mostrar el mensaje "Invalid Email."
         const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
-        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
+        await expect(getEmailSaveResponse).toHaveText('Email cannot be longer than 191 characters.')
         // AND no se debería guardar el nuevo correo
         await membersPage.reload();
         const emailInput = await membersPage.getEmailInputLocator();
@@ -607,7 +607,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e12,
                 "06-after-validations"
             )
         );
@@ -626,7 +626,7 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Invalid Email."
      * AND no se debería guardar el nuevo correo
      */
-    const e13 = "E013-correo-invalido-sin-dominio"
+    const e13 = "E013-correo-invalido-vacio"
     test(e13, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
@@ -643,7 +643,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "01-login"
             )
         );
@@ -654,7 +654,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "02-pagina-miembros"
             )
         );
@@ -669,7 +669,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "03-miembro-creado"
             )
         );
@@ -680,7 +680,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "04-before-when"
             )
         );
@@ -700,7 +700,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "05-edit-member"
             )
         );
@@ -709,7 +709,7 @@ test.describe('F5', async () => {
         expect(saveButtonResponse.trim()).toEqual('Retry');
         // AND se debería mostrar el mensaje "Invalid Email."
         const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
-        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
+        await expect(getEmailSaveResponse).toHaveText('Please enter an email.')
         // AND no se debería guardar el nuevo correo
         await membersPage.reload();
         const emailInput = await membersPage.getEmailInputLocator();
@@ -719,7 +719,7 @@ test.describe('F5', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e9,
+                e13,
                 "06-after-validations"
             )
         );

@@ -241,7 +241,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "01-members-page"
             )
         );
@@ -253,7 +253,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "02-create-member"
             )
         );
@@ -263,7 +263,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "03-member-saved"
             )
         );
@@ -274,7 +274,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "04-changed-to-valid-email"
             )
         );
@@ -285,7 +285,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "05-member-saved"
             )
         );
@@ -297,7 +297,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "06-validate-no-errors"
             )
         );
@@ -313,7 +313,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e14,
                 "07-members-page"
             )
         );
@@ -354,7 +354,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "01-members-page"
             )
         );
@@ -366,7 +366,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "02-create-member"
             )
         );
@@ -376,7 +376,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "03-member-saved"
             )
         );
@@ -387,7 +387,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "04-changed-to-valid-email"
             )
         );
@@ -398,7 +398,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "05-member-saved"
             )
         );
@@ -410,7 +410,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "06-validate-no-errors"
             )
         );
@@ -426,7 +426,7 @@ test.describe('F7', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e4,
+                e15,
                 "07-members-page"
             )
         );
