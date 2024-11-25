@@ -75,17 +75,18 @@ export class MemberRelatedProvider implements MemberProvider {
     private memberName: string;
     private memberEmail: string;
 
-    constructor() {
+    private generateInitialData(): void {
         this.memberName = faker.person.fullName();
         const [firstName, lastName] = this.memberName.split(' ');
         const randomSuffix = faker.string.alphanumeric(2);
         const commonDomains = ['.com', '.net', '.co'];
         const randomDomain = faker.helpers.arrayElement(commonDomains);
         const domainName = faker.internet.domainWord();
-        this.memberEmail = `${firstName}.${lastName}.${randomSuffix}@${domainName}${randomDomain}`;
+        this.memberEmail = `${firstName}${lastName}_${randomSuffix}@${domainName}${randomDomain}`;
     }
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case EMAIL_GENERATION_OPTIONS.NO_AT:
                 return this.memberEmail.replace('@', '');
@@ -99,6 +100,7 @@ export class MemberRelatedProvider implements MemberProvider {
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case NAME_GENERATION_OPTIONS.LONG:
                 const longNameSuffix = 'a'.repeat(91);
@@ -111,10 +113,12 @@ export class MemberRelatedProvider implements MemberProvider {
     }
 
     getValidEmail(): string {
+        this.generateInitialData();
         return this.memberEmail;
     }
 
     getValidName(): string {
+        this.generateInitialData();
         return this.memberName;
     }
 }
@@ -124,6 +128,9 @@ export class MemberRelatedProvider implements MemberProvider {
  * Obtiene los datos almacenados para las pruebas
  */
 export class MemberAPrioriProvider implements MemberProvider {
+
+    private valid_name: string;
+    private valid_email: string;
 
     private static readonly VALID_NAMES = [
         "John Doe",
@@ -159,10 +166,13 @@ export class MemberAPrioriProvider implements MemberProvider {
         return array[Math.floor(Math.random() * array.length)];
     }
 
-    private valid_name = this.getRandomElement(MemberAPrioriProvider.VALID_NAMES);
-    private valid_email = this.getRandomElement(MemberAPrioriProvider.VALID_EMAILS);
+    private generateInitialData(): void {
+        this.valid_name = this.getRandomElement(MemberAPrioriProvider.VALID_NAMES);
+        this.valid_email = this.getRandomElement(MemberAPrioriProvider.VALID_EMAILS);
+    }  
 
     getInvalidEmail(option: EMAIL_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case EMAIL_GENERATION_OPTIONS.NO_AT:
                 return this.valid_email.replace('@', '');
@@ -176,6 +186,7 @@ export class MemberAPrioriProvider implements MemberProvider {
     }
 
     getInvalidName(option: NAME_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case NAME_GENERATION_OPTIONS.LONG:
                 const longNameSuffix = 'a'.repeat(91);
@@ -188,10 +199,12 @@ export class MemberAPrioriProvider implements MemberProvider {
     }
 
     getValidEmail(): string {
+        this.generateInitialData();
         return this.valid_email;
     }
 
     getValidName(): string {
+        this.generateInitialData();
         return this.valid_name;
     }
 }

@@ -174,7 +174,7 @@ export class PostRelatedProvider implements PostProvider {
     private postDate: Date;
     private postTime: string;
 
-    constructor() {
+    private generateInitialData(): void {
         this.postTitle = faker.lorem.sentence();
         this.postContent = faker.lorem.paragraph();
         
@@ -192,15 +192,19 @@ export class PostRelatedProvider implements PostProvider {
         this.postTime = `${hoursString}:${minutesString}`;
     }
 
+
     getValidTitle(): string {
+        this.generateInitialData();
         return this.postTitle;
     }
 
     getValidContent(): string {
+        this.generateInitialData();
         return this.postContent;
     }
 
     getValidDate(): string {
+        this.generateInitialData();
         const year = this.postDate.getFullYear();
         const month = this.postDate.getMonth() + 1;
         const day = this.postDate.getDate();
@@ -217,10 +221,12 @@ export class PostRelatedProvider implements PostProvider {
     }
 
     getValidTime(): string {
+        this.generateInitialData();
         return this.postTime;
     }
 
     getInvalidDate(option: DATE_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case DATE_GENERATION_OPTIONS.PAST:
                 return faker.date.past().toISOString().split('T')[0];
@@ -234,6 +240,7 @@ export class PostRelatedProvider implements PostProvider {
     }
 
     getInvalidTime(option: TIME_GENERATION_OPTIONS): string {
+        this.generateInitialData();
         switch (option) {
             case TIME_GENERATION_OPTIONS.PAST:
                 const now = new Date();
