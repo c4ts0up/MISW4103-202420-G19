@@ -128,7 +128,7 @@ test.describe('F5', async () => {
 
 
     /**
-     * E9: Cambiar el correo de un miembro por un correo inválido
+     * E9: Cambiar el correo de un miembro por un correo inválido (sin dominio)
      *
      * GIVEN estoy loggeado como administrador
      * AND estoy en la página de miembros
@@ -140,13 +140,13 @@ test.describe('F5', async () => {
      * AND se debería mostrar el mensaje "Invalid Email."
      * AND no se debería guardar el nuevo correo
      */
-    const e9 = "E009-correo-invalido"
+    const e9 = "E009-correo-invalido-sin-dominio"
     test(e9, async ( { page, browserName, dataProvider } ) => {
         const membersPage = new MembersPage(page, config.membersPage.resource);
 
         const mockName = dataProvider.memberProvider.getValidName();
         const mockEmail = dataProvider.memberProvider.getValidEmail();
-        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_AT);
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_DOMAIN);
 
         logger.info(`mockName = ${mockName}`);
         logger.info(`mockEmail = ${mockEmail}`);
@@ -385,6 +385,342 @@ test.describe('F5', async () => {
                 browserName,
                 e10,
                 "08-after-validations"
+            )
+        );
+    });
+
+    /**
+     * E11: Cambiar el correo de un miembro por un correo inválido (sin arroba)
+     *
+     * GIVEN estoy loggeado como administrador
+     * AND estoy en la página de miembros
+     * AND hay un miembro X creado
+     * WHEN selecciono el miembro X
+     * AND cambio el correo por un correo inválido
+     * AND guardo la edición del miembro
+     * THEN se debería mostrar el mensaje "Retry"
+     * AND se debería mostrar el mensaje "Invalid Email."
+     * AND no se debería guardar el nuevo correo
+     */
+    const e11 = "E011-correo-invalido-sin-arroba"
+    test(e11, async ( { page, browserName, dataProvider } ) => {
+        const membersPage = new MembersPage(page, config.membersPage.resource);
+
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.NO_AT);
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+
+        // GIVEN estoy loggeado como administrador
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "01-login"
+            )
+        );
+
+        // AND estoy en la página de miembros
+        await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "02-pagina-miembros"
+            )
+        );
+
+        // AND hay un miembro creado
+        await membersPage.createMember(
+            mockName,
+            mockEmail
+        );
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "03-miembro-creado"
+            )
+        );
+        await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "04-before-when"
+            )
+        );
+
+        // WHEN selecciono un miembro
+        const selectedMember = await membersPage.findMember(mockEmail);
+
+        // AND cambio el correo por un correo inválido
+        // AND guardo la edición del miembro
+        const saveButtonResponse = await membersPage.editMember(
+            selectedMember,
+            mockName,
+            mockInvalidEmail
+        );
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "05-edit-member"
+            )
+        );
+
+        // THEN se debería mostrar el mensaje "Retry"
+        expect(saveButtonResponse.trim()).toEqual('Retry');
+        // AND se debería mostrar el mensaje "Invalid Email."
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
+        // AND no se debería guardar el nuevo correo
+        await membersPage.reload();
+        const emailInput = await membersPage.getEmailInputLocator();
+        await expect(emailInput).toHaveValue(mockEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "06-after-validations"
+            )
+        );
+    });
+
+    /**
+     * E12: Cambiar el correo de un miembro por un correo inválido (demasiado largo)
+     *
+     * GIVEN estoy loggeado como administrador
+     * AND estoy en la página de miembros
+     * AND hay un miembro X creado
+     * WHEN selecciono el miembro X
+     * AND cambio el correo por un correo inválido
+     * AND guardo la edición del miembro
+     * THEN se debería mostrar el mensaje "Retry"
+     * AND se debería mostrar el mensaje "Invalid Email."
+     * AND no se debería guardar el nuevo correo
+     */
+    const e12 = "E012-correo-invalido-muy-largo"
+    test(e12, async ( { page, browserName, dataProvider } ) => {
+        const membersPage = new MembersPage(page, config.membersPage.resource);
+
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.LONG);
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+
+        // GIVEN estoy loggeado como administrador
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "01-login"
+            )
+        );
+
+        // AND estoy en la página de miembros
+        await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "02-pagina-miembros"
+            )
+        );
+
+        // AND hay un miembro creado
+        await membersPage.createMember(
+            mockName,
+            mockEmail
+        );
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "03-miembro-creado"
+            )
+        );
+        await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "04-before-when"
+            )
+        );
+
+        // WHEN selecciono un miembro
+        const selectedMember = await membersPage.findMember(mockEmail);
+
+        // AND cambio el correo por un correo inválido
+        // AND guardo la edición del miembro
+        const saveButtonResponse = await membersPage.editMember(
+            selectedMember,
+            mockName,
+            mockInvalidEmail
+        );
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "05-edit-member"
+            )
+        );
+
+        // THEN se debería mostrar el mensaje "Retry"
+        expect(saveButtonResponse.trim()).toEqual('Retry');
+        // AND se debería mostrar el mensaje "Invalid Email."
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
+        // AND no se debería guardar el nuevo correo
+        await membersPage.reload();
+        const emailInput = await membersPage.getEmailInputLocator();
+        await expect(emailInput).toHaveValue(mockEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "06-after-validations"
+            )
+        );
+    });
+
+    /**
+     * E13: Cambiar el correo de un miembro por un correo inválido (demasiado corto)
+     *
+     * GIVEN estoy loggeado como administrador
+     * AND estoy en la página de miembros
+     * AND hay un miembro X creado
+     * WHEN selecciono el miembro X
+     * AND cambio el correo por un correo inválido
+     * AND guardo la edición del miembro
+     * THEN se debería mostrar el mensaje "Retry"
+     * AND se debería mostrar el mensaje "Invalid Email."
+     * AND no se debería guardar el nuevo correo
+     */
+    const e13 = "E013-correo-invalido-sin-dominio"
+    test(e13, async ( { page, browserName, dataProvider } ) => {
+        const membersPage = new MembersPage(page, config.membersPage.resource);
+
+        const mockName = dataProvider.memberProvider.getValidName();
+        const mockEmail = dataProvider.memberProvider.getValidEmail();
+        const mockInvalidEmail = dataProvider.memberProvider.getInvalidEmail(EMAIL_GENERATION_OPTIONS.SHORT);
+
+        logger.info(`mockName = ${mockName}`);
+        logger.info(`mockEmail = ${mockEmail}`);
+        logger.info(`mockInvalidEmail = ${mockInvalidEmail}`);
+
+        // GIVEN estoy loggeado como administrador
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "01-login"
+            )
+        );
+
+        // AND estoy en la página de miembros
+        await membersPage.navigateTo();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "02-pagina-miembros"
+            )
+        );
+
+        // AND hay un miembro creado
+        await membersPage.createMember(
+            mockName,
+            mockEmail
+        );
+        await membersPage.saveMemberChanges();
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "03-miembro-creado"
+            )
+        );
+        await membersPage.navigateTo();
+
+        // before screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "04-before-when"
+            )
+        );
+
+        // WHEN selecciono un miembro
+        const selectedMember = await membersPage.findMember(mockEmail);
+
+        // AND cambio el correo por un correo inválido
+        // AND guardo la edición del miembro
+        const saveButtonResponse = await membersPage.editMember(
+            selectedMember,
+            mockName,
+            mockInvalidEmail
+        );
+        // after screenshot
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "05-edit-member"
+            )
+        );
+
+        // THEN se debería mostrar el mensaje "Retry"
+        expect(saveButtonResponse.trim()).toEqual('Retry');
+        // AND se debería mostrar el mensaje "Invalid Email."
+        const getEmailSaveResponse = await membersPage.getEmailSaveResponse();
+        await expect(getEmailSaveResponse).toHaveText('Invalid Email.')
+        // AND no se debería guardar el nuevo correo
+        await membersPage.reload();
+        const emailInput = await membersPage.getEmailInputLocator();
+        await expect(emailInput).toHaveValue(mockEmail);
+
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e9,
+                "06-after-validations"
             )
         );
     });
