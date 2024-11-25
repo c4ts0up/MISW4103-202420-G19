@@ -32,7 +32,7 @@ Playwright/screenshots/
 Playwright/videos/
 
 # Evidencias, fotos, etc.
-/PlaywrightAlvaro/evidence/
+/PlaywrightSuite/evidence/
 /VR/evidence/
 /VR/results_vr/
 **.iml
