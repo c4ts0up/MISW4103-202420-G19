@@ -7,7 +7,7 @@ export enum SubSettingsSelectors {
     TIMEZONE
 }
 
-const SettingsOptions= {
+const SettingsOptions = {
     language: {
         resource: 'publication-language',
         editButton: 'div[data-testid="publication-language"] button:has-text("Edit")',
