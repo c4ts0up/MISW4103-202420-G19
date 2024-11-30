@@ -22,7 +22,7 @@ test.describe('F2', async () => {
      * AND guardo la nueva zona horaria
      * THEN se debería guardar la nueva zona horaria
      */
-    const e30 = 'E030-zona-horaria-valTIMEZONE: anyida';
+    const e30 = 'E030-zona-horaria-inválida';
     test(e30, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
@@ -36,14 +36,21 @@ test.describe('F2', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e5,
+                e30,
                 "01-settings-page"
             )
         );
 
         // WHEN edito la opción de zona horaria
         await settingsPage.navigateToSubSetting(SubSettingsSelectors.TIMEZONE);
-
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e30,
+                "02-timezone-sub-menu"
+            )
+        );
     });
 
     /**
@@ -70,7 +77,7 @@ test.describe('F2', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e5,
+                e31,
                 "01-settings-page"
             )
         );
@@ -82,7 +89,7 @@ test.describe('F2', async () => {
                 config.evidence.baseDirectory,
                 config.sut.version,
                 browserName,
-                e5,
+                e31,
                 "02-timezone-sub-menu"
             )
         );

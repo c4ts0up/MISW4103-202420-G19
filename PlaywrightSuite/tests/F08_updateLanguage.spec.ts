@@ -61,7 +61,7 @@ test.describe('F8', async () => {
         );
 
         // WHEN edito el idioma de publicación
-        await settingsPage.clickEditButton();
+        await settingsPage.clickEditButton(SubSettingsSelectors.LANGUAGE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -82,7 +82,7 @@ test.describe('F8', async () => {
         );
 
         // THEN el idioma debería guardarse correctamente
-        await settingsPage.confirmLanguageUpdate();
+        await settingsPage.confirmLanguageUpdate(SubSettingsSelectors.LANGUAGE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -136,7 +136,7 @@ test.describe('F8', async () => {
         );
 
         // WHEN edito el idioma de publicación
-        await settingsPage.clickEditButton();
+        await settingsPage.clickEditButton(SubSettingsSelectors.LANGUAGE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
