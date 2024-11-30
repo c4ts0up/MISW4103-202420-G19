@@ -22,7 +22,7 @@ test.describe('F2', async () => {
      * AND guardo la nueva zona horaria
      * THEN se debería guardar la nueva zona horaria
      */
-    const e30 = 'E030-zona-horaria-valida';
+    const e30 = 'E030-zona-horaria-valTIMEZONE: anyida';
     test(e30, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 

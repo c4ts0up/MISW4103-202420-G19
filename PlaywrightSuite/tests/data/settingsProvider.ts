@@ -25,6 +25,17 @@ export interface SettingsProvider {
      * @param option qué característica invalidará al lenguaje dado
      */
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string
+
+    /**
+     * Zona horaria válida
+     */
+    getValidTimezone(): string;
+
+    /**
+     * Zona horaria inválida
+     *
+     */
+    getInvalidTimezone(): string;
 }
 
 
@@ -32,6 +43,12 @@ export interface SettingsProvider {
  * Obtiene los datos de manera completamente aleatoria y sin relación
  */
 export class SettingsRandomProvider implements SettingsProvider {
+    getValidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
+    getInvalidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
     getInvalidLanguage(option: LANGUAGE_GENERATION_OPTIONS): string {
         return new RandExp(option).gen();
     }
@@ -53,6 +70,12 @@ export class SettingsRandomProvider implements SettingsProvider {
  * Obtiene los datos de manera pseudoaleatoria. Los datos tienen relación entre ellos
  */
 export class SettingsRelatedProvider implements SettingsProvider {
+    getValidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
+    getInvalidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
 
     getValidLanguage(): string {
         const codes = [
@@ -78,6 +101,12 @@ export class SettingsRelatedProvider implements SettingsProvider {
  * Obtiene los datos almacenados para las pruebas
  */
 export class SettingsAPrioriProvider implements SettingsProvider {
+    getValidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
+    getInvalidTimezone(): string {
+        throw new Error("Method not implemented.");
+    }
 
     private static readonly VALID_LANGUAGES = [
         'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'ru', 'ja'
