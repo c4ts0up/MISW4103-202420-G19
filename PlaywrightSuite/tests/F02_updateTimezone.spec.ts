@@ -9,6 +9,7 @@ import SettingsPage, {SubSettingsSelectors} from "./pages/settingsPage";
 import {config} from "./config/config";
 import {myScreenshot} from "./utils/evidence";
 import {screenshotPath} from "./utils/pathCreator";
+import {expect} from "@playwright/test";
 
 test.describe('F2', async () => {
 
@@ -22,7 +23,7 @@ test.describe('F2', async () => {
      * AND guardo la nueva zona horaria
      * THEN se debería guardar la nueva zona horaria
      */
-    const e30 = 'E030-zona-horaria-inválida';
+    const e30 = 'E030-zona-horaria-válida';
     test(e30, async ( { page, browserName, dataProvider } ) => {
         const settingsPage = new SettingsPage(page, config.settingsPage.resource);
 
@@ -51,6 +52,40 @@ test.describe('F2', async () => {
                 "02-timezone-sub-menu"
             )
         );
+        await settingsPage.clickEditButton(SubSettingsSelectors.TIMEZONE);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e30,
+                "03-edit-button-clicked"
+            )
+        );
+
+        // AND selecciono una zona horaria inválida
+        await settingsPage.changeTimezone(timezone);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e30,
+                "04-valid-timezone"
+            )
+        );
+
+        // AND guardo la nueva zona horaria
+        await settingsPage.confirmSettingUpdate(SubSettingsSelectors.TIMEZONE);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e30,
+                "05-update-setting"
+            )
+        );
+
+        // THEN se debería guardar la nueva zona horaria
+        expect(settingsPage.getInitialTextLocator(SubSettingsSelectors.TIMEZONE)).not.toContain(timezone);
     });
 
     /**
@@ -60,8 +95,7 @@ test.describe('F2', async () => {
      * AND estoy en la página de configuraciones generales
      * WHEN edito la opción de zona horaria
      * AND selecciono una zona horaria inválida
-     * AND guardo la nueva zona horaria
-     * THEN se muestra un error de zona horaria inválida
+     * THEN no puedo guardar la zona horaria
      */
     const e31 = 'E031-zona-horaria-invalida';
     test(e31, async( { page, browserName, dataProvider } ) => {
@@ -84,7 +118,6 @@ test.describe('F2', async () => {
 
         // WHEN edito la opción de zona horaria
         await settingsPage.navigateToSubSetting(SubSettingsSelectors.TIMEZONE);
-        await settingsPage.clickEditButton(SubSettingsSelectors.TIMEZONE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
@@ -93,8 +126,37 @@ test.describe('F2', async () => {
                 "02-timezone-sub-menu"
             )
         );
+        await settingsPage.clickEditButton(SubSettingsSelectors.TIMEZONE);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e31,
+                "03-edit-button-clicked"
+            )
+        );
 
         // AND selecciono una zona horaria inválida
+        await settingsPage.changeTimezone(timezone);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e31,
+                "04-invalid-timezone"
+            )
+        );
 
+
+        // AND guardo la nueva zona horaria
+        await settingsPage.cantConfirmSetting(SubSettingsSelectors.TIMEZONE);
+        await myScreenshot(page, screenshotPath(
+                config.evidence.baseDirectory,
+                config.sut.version,
+                browserName,
+                e31,
+                "05-disabled-button"
+            )
+        );
     });
 });

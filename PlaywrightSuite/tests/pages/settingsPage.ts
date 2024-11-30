@@ -1,23 +1,28 @@
 import {BasePage} from "./basePage";
 import {Page} from "playwright";
 import logger from "../utils/logger";
+import {expect} from "@playwright/test";
 
 export enum SubSettingsSelectors {
-    LANGUAGE,
-    TIMEZONE
+    LANGUAGE = 'language',
+    TIMEZONE = 'timezone'
 }
 
 const SettingsOptions = {
     language: {
         resource: 'publication-language',
+        testId: "publication-language",
         editButton: 'div[data-testid="publication-language"] button:has-text("Edit")',
-        saveButton: 'button.bg-green'
+        saveButton: 'button.bg-green',
+        initialText: 'div[data-testid="publication-language"] input'
     },
 
     timezone: {
         resource: 'timezone',
+        testId: "timezone",
         editButton: 'div[data-testid="timezone"] button:has-text("Edit")',
-        saveButton: 'button.bg-green'
+        saveButton: 'button.bg-green',
+        initialText: 'div[data-testid="timezone-select"] > :nth-child(1)'
     }
 }
 
@@ -56,17 +61,18 @@ class SettingsPage extends BasePage {
         await this.page.click(button);
     }
 
-    async changeLanguage(language: string) {
-        logger.info(`Changing language to language = ${language}`);
-        const languageField = await this.page.$(this.languageInput);
-        await languageField!.click();
-        await languageField!.press('Control+A');
-        await languageField!.press('Backspace');
-        await this.page.fill(this.languageInput, language);
+    async changeTimezone(timezone: string) {
+        logger.info(`Changing timezone to timezone = ${timezone}`);
+        await this.page
+            .getByTestId('timezone-select')
+            .click();
+
+        await this.page.keyboard.type(timezone);
+        await this.page.keyboard.press('Enter');
     }
 
-    async confirmLanguageUpdate(subSetting: SubSettingsSelectors) {
-        logger.info(`Confirming language update`);
+    async confirmSettingUpdate(subSetting: SubSettingsSelectors) {
+        logger.info(`Confirming ${subSetting} update`);
 
         const button = {
             [SubSettingsSelectors.LANGUAGE]: SettingsOptions.language.saveButton,
@@ -74,6 +80,39 @@ class SettingsPage extends BasePage {
         }[subSetting];
 
         await this.page.click(button);
+    }
+
+    async getInitialTextLocator(subSetting: SubSettingsSelectors) {
+        logger.info(`Getting inital text from ${subSetting}`);
+
+        const intialTextLocator = {
+            [SubSettingsSelectors.LANGUAGE]: SettingsOptions.language.initialText,
+            [SubSettingsSelectors.TIMEZONE]: SettingsOptions.timezone.initialText,
+        }[subSetting]
+
+        await this.page.waitForLoadState('domcontentloaded');
+
+        return this.page.locator(intialTextLocator);
+    }
+
+    async cantConfirmSetting(subSetting: SubSettingsSelectors) {
+        logger.info(`Validating that ${subSetting} update is impossible`);
+
+        const button = {
+            [SubSettingsSelectors.LANGUAGE]: SettingsOptions.language.saveButton,
+            [SubSettingsSelectors.TIMEZONE]: SettingsOptions.timezone.saveButton,
+        }[subSetting];
+
+        await expect(this.page.locator(button)).toHaveCount(0);
+    }
+
+    async changeLanguage(language: string) {
+        logger.info(`Changing language to language = ${language}`);
+        const languageField = await this.page.$(this.languageInput);
+        await languageField!.click();
+        await languageField!.press('Control+A');
+        await languageField!.press('Backspace');
+        await this.page.fill(this.languageInput, language);
     }
 
     // FIXME: usar expect-based

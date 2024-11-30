@@ -82,7 +82,7 @@ test.describe('F8', async () => {
         );
 
         // THEN el idioma debería guardarse correctamente
-        await settingsPage.confirmLanguageUpdate(SubSettingsSelectors.LANGUAGE);
+        await settingsPage.confirmSettingUpdate(SubSettingsSelectors.LANGUAGE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
                 config.sut.version,
