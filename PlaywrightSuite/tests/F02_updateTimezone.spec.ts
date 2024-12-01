@@ -148,7 +148,7 @@ test.describe('F2', async () => {
         );
 
 
-        // AND guardo la nueva zona horaria
+        // THEN no puedo guardar la zona horaria
         await settingsPage.cantConfirmSetting(SubSettingsSelectors.TIMEZONE);
         await myScreenshot(page, screenshotPath(
                 config.evidence.baseDirectory,
