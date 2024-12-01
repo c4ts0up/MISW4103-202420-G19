@@ -32,6 +32,44 @@ class MembersPage extends BasePage {
         super(page, resource);
     }
 
+    private initialEmailPosition: { x: number; y: number } | null = null;
+
+    async captureEmailPosition() {
+        logger.info(`Capturing initial position of email input field`);
+
+        const emailInputLocator = this.page.locator(this.emailInput);
+        const boundingBox = await emailInputLocator.boundingBox();
+
+        if (!boundingBox) {
+            throw new Error("Unable to retrieve the initial position of the email input field.");
+        }
+
+        this.initialEmailPosition = { x: boundingBox.x, y: boundingBox.y };
+        logger.info(`Initial position captured: x=${boundingBox.x}, y=${boundingBox.y}`);
+    }
+
+    async validateEmailPositionUnchangedAfterModification() {
+        logger.info(`Validating email field position remains unchanged after modification`);
+    
+        if (!this.initialEmailPosition) {
+            throw new Error("Initial position of email input field was not captured. Call captureEmailPosition() first.");
+        }
+    
+        const emailInputLocator = this.page.locator(this.emailInput);
+        const currentPosition = await emailInputLocator.boundingBox();
+    
+        if (!currentPosition) {
+            throw new Error("Unable to retrieve the current position of the email input field.");
+        }
+    
+        // Comparar posiciones inicial y final
+        expect(currentPosition.x).toBeCloseTo(this.initialEmailPosition.x, 1); // Validar posición X
+        expect(currentPosition.y).toBeCloseTo(this.initialEmailPosition.y, 1); // Validar posición Y
+    
+        logger.info(`Email field position remains unchanged: x=${currentPosition.x}, y=${currentPosition.y}`);
+    }
+    
+
     async findMember(memberEmail: string) {
         logger.info(`Searching for member with memberEmail = ${memberEmail}`);
         // wait for members to load

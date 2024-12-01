@@ -11,6 +11,7 @@ export enum EMAIL_GENERATION_OPTIONS {
     SHORT = `^$`,
     NO_AT = `^[a-zA-Z0-9]{3,50}(\\.[a-zA-Z]{2,3}){1,5}$`,
     NO_DOMAIN = `^[a-zA-Z0-9]{3,50}@[a-zA-Z]{3,10}$`,
+    NO_AT_NO_DOMAIN = `^[a-zA-Z0-9]{3,50}$`,
     SPECIAL_CHARACTERS = `^[\x00-\x7F]{3,20}@[a-zA-Z]{3,20}\\.[a-zA-Z]{2,3}$`
 }
 
@@ -93,6 +94,8 @@ export class MemberRelatedProvider implements MemberProvider {
                 return this.memberEmail.split('@')[0] + '@example';
             case EMAIL_GENERATION_OPTIONS.SPECIAL_CHARACTERS:
                 return this.memberEmail.replace(/[a-zA-Z0-9]/g, '!');
+            case EMAIL_GENERATION_OPTIONS.NO_AT_NO_DOMAIN:
+                return this.memberEmail.split('@')[0];
             default:
                 return this.memberEmail.split('@')[0] + '@example';
         }
@@ -102,7 +105,7 @@ export class MemberRelatedProvider implements MemberProvider {
         this.generateInitialData();
         switch (option) {
             case NAME_GENERATION_OPTIONS.LONG:
-                const longNameSuffix = 'a'.repeat(91);
+                const longNameSuffix = 'a'.repeat(1000);
                 return `${this.memberName}${longNameSuffix}`;
             case NAME_GENERATION_OPTIONS.SHORT:
                 return 'A';
@@ -194,6 +197,8 @@ export class MemberAPrioriProvider implements MemberProvider {
                 return this.valid_email.split('@')[0] + '@example';
             case EMAIL_GENERATION_OPTIONS.SPECIAL_CHARACTERS:
                 return this.valid_email.replace(/[a-zA-Z0-9]/g, '!');
+            case EMAIL_GENERATION_OPTIONS.NO_AT_NO_DOMAIN:
+                return this.valid_email.split('@')[0];
             default:
                 return this.valid_email.split('@')[0] + '@example';
         }
@@ -208,7 +213,7 @@ export class MemberAPrioriProvider implements MemberProvider {
         this.used_name = true;
         switch (option) {
             case NAME_GENERATION_OPTIONS.LONG:
-                const longNameSuffix = 'a'.repeat(91);
+                const longNameSuffix = 'a'.repeat(1000);
                 return `${this.valid_name}${longNameSuffix}`;
             case NAME_GENERATION_OPTIONS.SHORT:
                 return 'A';
