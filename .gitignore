@@ -36,3 +36,14 @@ Playwright/videos/
 /VR/evidence/
 /VR/results_vr/
 **.iml
+
+# Rippuppet
+Rippuppet/node_modules/
+Rippuppet/.png\n*
+Rippuppet/screenshots*/
+Rippuppet/temp*/
+Rippuppet/*graph.json
+Rippuppet/*graph2.json
+Rippuppet/*graph3.json
+Rippuppet/firebaseConfig.js
+Rippuppet/results/
