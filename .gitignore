@@ -38,12 +38,12 @@ Playwright/videos/
 **.iml
 
 # Rippuppet
-/rippuppet/node_modules/
-/rippuppet/.png\n*
-/rippuppet/screenshots*/
-/rippuppet/temp*/
-/rippuppet/*graph.json
-/rippuppet/*graph2.json
-/rippuppet/*graph3.json
-/rippuppet/firebaseConfig.js
-/rippuppet/results/
+Rippuppet/node_modules/
+Rippuppet/.png\n*
+Rippuppet/screenshots*/
+Rippuppet/temp*/
+Rippuppet/*graph.json
+Rippuppet/*graph2.json
+Rippuppet/*graph3.json
+Rippuppet/firebaseConfig.js
+Rippuppet/results/

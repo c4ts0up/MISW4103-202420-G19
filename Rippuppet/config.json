@@ -1,0 +1,13 @@
+{
+    "url": "http://localhost:3001/ghost/#",
+    "headless": true,
+    "depthLevels": 1,
+    "inputValues": true,
+    "values": {
+        "adminCookieName": "ghost-admin-api-session",
+        "adminCookieValue": "s%3A6_IWBMueseoOwe61ng6LHyBJhCbFcyUd.bP1uWR8jIHg2Ui%2FvdlY%2FfKTPgdFBao7tw4YmAD2uvt4",
+        "adminUser": "rigby@mail.com",
+        "adminPassword": "rigby123456"
+    },
+    "browsers": ["chromium", "webkit", "firefox"]
+}
