@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import RandExp from "randexp";
+import RandExp = require("randexp");
 
 export enum NAME_GENERATION_OPTIONS {
     LONG = `^[A-Z][a-z]{91} [A-Z][a-z]{100}$`,
