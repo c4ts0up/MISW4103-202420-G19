@@ -21,6 +21,7 @@ Clone este repositorio utilizando la URL HTTPs con el comando
 El repositorio está dividido en dos ramas principales, que representan las versiones del código que se analizaron para la Aplicación Bajo Pruebas (ABP):
 
 `version/5.96.0`: Contiene el código para realizar las pruebas en la versión 5.96.0
+
 `version/4.5.0`: Contiene el código para realizar las pruebas en la versión 4.5.0
 
 ## Pruebas de Regresión Visual
@@ -52,3 +53,6 @@ Los resultados se almacenarán en una carpeta que se genera llamada `reports`. T
 
 ## Pruebas en Playwright
 Para ejecutar las pruebas en Playwright, diríjase a ``./PlaywrightSuite`` y lea el ``README.md`` correspondiente. 
+
+## Pruebas en RIPPuppeteer
+Para ejecutar las pruebas en RIPPuppeteer, diríjase a ``./Rippuppet`` y lea el ``README.md`` correspondiente. 
